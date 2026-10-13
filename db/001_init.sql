@@ -1,0 +1,178 @@
+-- SmartInv schema v1. MySQL 8.0.16+ (CHECK constraints enforced), InnoDB.
+-- Create the database first:  CREATE DATABASE smartinv CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+
+CREATE TABLE categories (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(80) NOT NULL UNIQUE,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- hod_user_id foreign key is added after users exists (circular reference)
+CREATE TABLE departments (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  hod_user_id INT UNSIGNED NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE suppliers (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(120) NOT NULL,
+  phone VARCHAR(30) NULL,
+  address VARCHAR(255) NULL,
+  category_id INT UNSIGNED NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_suppliers_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE users (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(120) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  phone VARCHAR(30) NULL,
+  role ENUM('ADMIN','PRINCIPAL','HOD','REQUESTER','PROCUREMENT_OFFICER','STORE_MANAGER','SUPPLIER') NOT NULL,
+  status ENUM('PENDING','ACTIVE','DISABLED') NOT NULL DEFAULT 'PENDING',
+  department_id INT UNSIGNED NULL,
+  supplier_id INT UNSIGNED NULL,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_users_department FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL,
+  CONSTRAINT fk_users_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE SET NULL,
+  INDEX idx_users_role_status (role, status)
+) ENGINE=InnoDB;
+
+ALTER TABLE departments
+  ADD CONSTRAINT fk_departments_hod FOREIGN KEY (hod_user_id) REFERENCES users(id) ON DELETE SET NULL;
+
+CREATE TABLE items (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  sku VARCHAR(40) NOT NULL UNIQUE,
+  name VARCHAR(120) NOT NULL,
+  category_id INT UNSIGNED NULL,
+  unit VARCHAR(20) NOT NULL DEFAULT 'nos',
+  stock_qty INT NOT NULL DEFAULT 0,
+  min_level INT NOT NULL DEFAULT 0,
+  unit_cost DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  low_stock_alerted TINYINT(1) NOT NULL DEFAULT 0,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_items_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+  CONSTRAINT chk_items_stock CHECK (stock_qty >= 0),
+  CONSTRAINT chk_items_min CHECK (min_level >= 0),
+  INDEX idx_items_name (name)
+) ENGINE=InnoDB;
+
+CREATE TABLE purchase_requests (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  req_no VARCHAR(40) NOT NULL UNIQUE,
+  department_id INT UNSIGNED NOT NULL,
+  requested_by INT UNSIGNED NULL,
+  priority ENUM('LOW','NORMAL','HIGH') NOT NULL DEFAULT 'NORMAL',
+  status ENUM('PENDING_HOD','PENDING_PRINCIPAL','APPROVED','REJECTED','CANCELLED','ORDERED','RETURNED_BY_PROCUREMENT','RECEIVED') NOT NULL,
+  justification TEXT NULL,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_pr_department FOREIGN KEY (department_id) REFERENCES departments(id),
+  CONSTRAINT fk_pr_requested_by FOREIGN KEY (requested_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_pr_status (status),
+  INDEX idx_pr_dept_status (department_id, status)
+) ENGINE=InnoDB;
+
+CREATE TABLE request_items (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  request_id INT UNSIGNED NOT NULL,
+  item_id INT UNSIGNED NOT NULL,
+  quantity INT NOT NULL,
+  CONSTRAINT fk_ri_request FOREIGN KEY (request_id) REFERENCES purchase_requests(id) ON DELETE CASCADE,
+  CONSTRAINT fk_ri_item FOREIGN KEY (item_id) REFERENCES items(id),
+  CONSTRAINT chk_ri_qty CHECK (quantity > 0),
+  UNIQUE KEY uq_ri_request_item (request_id, item_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE request_approvals (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  request_id INT UNSIGNED NOT NULL,
+  decided_by INT UNSIGNED NULL,
+  stage ENUM('HOD','PRINCIPAL','PROCUREMENT') NOT NULL,
+  decision ENUM('APPROVED','REJECTED','RETURNED') NOT NULL,
+  reason TEXT NULL,
+  decided_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_ra_request FOREIGN KEY (request_id) REFERENCES purchase_requests(id) ON DELETE CASCADE,
+  CONSTRAINT fk_ra_user FOREIGN KEY (decided_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE purchase_orders (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  po_no VARCHAR(40) NOT NULL UNIQUE,
+  request_id INT UNSIGNED NOT NULL,
+  supplier_id INT UNSIGNED NOT NULL,
+  status ENUM('PLACED','CONFIRMED','SHIPPED','DELIVERED','RECEIVED','CANCELLED') NOT NULL DEFAULT 'PLACED',
+  expected_date DATE NULL,
+  delivered_date DATE NULL,
+  total_amount DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  created_by INT UNSIGNED NULL,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_po_request FOREIGN KEY (request_id) REFERENCES purchase_requests(id),
+  CONSTRAINT fk_po_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id),
+  CONSTRAINT fk_po_created_by FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_po_supplier_status (supplier_id, status),
+  INDEX idx_po_request (request_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE po_items (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  po_id INT UNSIGNED NOT NULL,
+  item_id INT UNSIGNED NOT NULL,
+  quantity INT NOT NULL,
+  unit_price DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_poi_po FOREIGN KEY (po_id) REFERENCES purchase_orders(id) ON DELETE CASCADE,
+  CONSTRAINT fk_poi_item FOREIGN KEY (item_id) REFERENCES items(id),
+  CONSTRAINT chk_poi_qty CHECK (quantity > 0)
+) ENGINE=InnoDB;
+
+CREATE TABLE stock_movements (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  item_id INT UNSIGNED NOT NULL,
+  type ENUM('RECEIPT','ISSUE','ADJUSTMENT') NOT NULL,
+  quantity INT NOT NULL,
+  balance_after INT NOT NULL,
+  po_id INT UNSIGNED NULL,
+  department_id INT UNSIGNED NULL,
+  recorded_by INT UNSIGNED NULL,
+  reason VARCHAR(255) NULL,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_sm_item FOREIGN KEY (item_id) REFERENCES items(id),
+  CONSTRAINT fk_sm_po FOREIGN KEY (po_id) REFERENCES purchase_orders(id) ON DELETE SET NULL,
+  CONSTRAINT fk_sm_department FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL,
+  CONSTRAINT fk_sm_user FOREIGN KEY (recorded_by) REFERENCES users(id) ON DELETE SET NULL,
+  CONSTRAINT chk_sm_qty CHECK (quantity <> 0),
+  INDEX idx_sm_item_date (item_id, created_at)
+) ENGINE=InnoDB;
+
+CREATE TABLE notifications (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  type VARCHAR(40) NOT NULL,
+  message VARCHAR(500) NOT NULL,
+  link VARCHAR(255) NULL,
+  is_read TINYINT(1) NOT NULL DEFAULT 0,
+  emailed TINYINT(1) NOT NULL DEFAULT 0,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_n_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_n_user_read (user_id, is_read, created_at)
+) ENGINE=InnoDB;
