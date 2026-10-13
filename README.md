@@ -1,28 +1,51 @@
 # SIMPS (Smart Inventory and Procurement Management System)
 
-Everything an AI coding agent (Antigravity) needs to build the Smart Inventory and Procurement
-Management System (SIMPS) for Ramco Institute of Technology's central store.
+Web application for the central store of Ramco Institute of Technology: stock tracking, purchase requests with HoD/Principal approval, purchase orders to suppliers, goods receipt, alerts, and reports.
 
-## Contents
-| Path | Purpose |
-|---|---|
-| `AGENTS.md` | Standing rules for the agent: stack, security, data-integrity and "no fake data" rules |
-| `docs/SPEC.md` | Behaviour: roles, permissions, workflows, business rules, requirements |
-| `db/001_init.sql` | The database schema (MySQL 8) |
-| `docs/API.md` | REST endpoint contract |
-| `docs/UI.md` | Light SaaS design system and screen list |
-| `prompts/00..10` | Build prompts, run in order |
+## Prerequisites
+- Node.js 20+
+- Git
+- Docker (or local MySQL 8.0+)
 
-## How to use
-1. Create the GitHub repo (`smart-inventory-procurement`), clone it, and copy this pack's contents into the repo root.
-2. Install: Node 20+, MySQL 8 (or Docker), Git.
-3. Open the repo folder in Antigravity. Add the contents of `AGENTS.md` as a workspace rule so it applies to every agent session (check Antigravity's current Customizations/Rules settings for the exact place).
-4. Run the prompts **in order, one per agent conversation**. Start each session with:
-   > Read AGENTS.md, then read and execute prompts/NN-name.md. Show me a plan first.
-5. Review the plan before approving. When the agent finishes, run the acceptance checks yourself, commit, merge the branch, then start the next prompt.
-6. The docs are the source of truth. If the agent drifts, tell it to re-read them. If a doc is wrong, fix the doc first, then continue.
+## Quick Start
+1. **Clone repository:**
+   ```bash
+   git clone https://github.com/viphakaran/SIMPS.git
+   cd SIMPS
+   ```
+2. **Start MySQL database:**
+   ```bash
+   docker compose up -d
+   ```
+3. **Environment Setup:**
+   - Copy `server/.env.example` to `server/.env` and update secrets if needed.
+   - Copy `client/.env.example` to `client/.env`.
+4. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
+5. **Database Migration:**
+   ```bash
+   npm run migrate
+   ```
+6. **Create Initial Admin Account:**
+   ```bash
+   npm run create-admin
+   ```
+7. **Run Development Server (Client & Server):**
+   ```bash
+   npm run dev
+   ```
 
-## Principles
-- One prompt = one reviewable unit of work on its own branch.
-- Acceptance checks are commands you can run, not opinions.
-- The app contains no fabricated data. Demo data lives only in `demo/` and can be attached and removed with one command each.
+## Demo Data
+- Load demo data: `npm run demo:load`
+- Status of demo data: `npm run demo:status`
+- Clear demo data: `npm run demo:clear`
+
+## Documentation & Architecture
+- [AGENTS.md](AGENTS.md) — Architectural rules, security standards, and non-negotiable conventions
+- [docs/SPEC.md](docs/SPEC.md) — Functional specifications, roles, and business workflows
+- [docs/API.md](docs/API.md) — REST API endpoint contract
+- [docs/UI.md](docs/UI.md) — Design system and screen catalog
+- [db/001_init.sql](db/001_init.sql) — Core database schema (MySQL 8)
+- [PROGRESS.md](PROGRESS.md) — Phase-by-phase build logs and acceptance tracking
