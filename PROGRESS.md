@@ -5,7 +5,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 ## Summary Table
 | Phase | Prompt | Branch | Status | Merge Commit |
 |---|---|---|---|---|
-| 00 | 00-scaffold.md | feat/00-scaffold | not started | - |
+| 00 | 00-scaffold.md | feat/00-scaffold | done | b19d7af6cae3c2f679bb4398c6c980c611fb63bc |
 | 01 | 01-server-core-auth.md | feat/01-server-core-auth | not started | - |
 | 02 | 02-server-masters.md | feat/02-server-masters | not started | - |
 | 03 | 03-server-inventory-notifications.md | feat/03-server-inventory-notifications | not started | - |
@@ -22,11 +22,17 @@ Tracking build progress across all phases (prompts 00 through 10).
 ## Phase Details
 
 ### Phase 00: Scaffold
-- **Status:** not started
+- **Status:** done
 - **Branch:** feat/00-scaffold
-- **Merge Commit:** -
+- **Merge Commit:** b19d7af6cae3c2f679bb4398c6c980c611fb63bc
 - **Acceptance Checks:**
-- **Deviations:** None
+  - `docker compose up -d`: PASS — `simps-mysql` container started healthy on port 3306.
+  - `npm install`: PASS — Monorepo dependencies installed cleanly across client, server, and demo.
+  - `npm run dev`: PASS — Concurrently served server on port 5000 and Vite client on port 5173.
+  - `Invoke-RestMethod http://localhost:5000/api/health`: PASS — Returned `{"status":"ok"}`.
+  - `npm run lint`: PASS — Flat ESLint passed with 0 errors and 0 warnings.
+  - `git ls-files | Select-String '\.env'`: PASS — Only `client/.env.example` and `server/.env.example` tracked; secrets ignored.
+- **Deviations:** Added `eslint-plugin-react` to support ESLint 9 flat config JSX parsing cleanly.
 - **Open Issues:** None
 
 ### Phase 01: Server Core & Auth
