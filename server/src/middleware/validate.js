@@ -29,3 +29,9 @@ export function validate(schemas = {}) {
     }
   };
 }
+
+export function validateBody(schema) {
+  return validate({ body: schema });
+}
+
+export default validate;
