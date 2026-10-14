@@ -8,7 +8,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 00 | 00-scaffold.md | feat/00-scaffold | done | b19d7af6cae3c2f679bb4398c6c980c611fb63bc |
 | 01 | 01-server-core-auth.md | feat/01-server-core-auth | done | 718b931f7ec5e64d7cdbbda3d286e75c69a8b47d |
 | 02 | 02-server-masters.md | feat/02-masters | done | 0d6fc267ff90718d27416cf48b393ca7cd1541cd |
-| 03 | 03-server-inventory-notifications.md | feat/03-server-inventory-notifications | not started | - |
+| 03 | 03-server-inventory-notifications.md | feat/03-inventory | done | b185a0e259bb6ae5581c9b8ee63766bcf686f8c2 |
 | 04 | 04-server-procurement.md | feat/04-server-procurement | not started | - |
 | 05 | 05-server-reports.md | feat/05-server-reports | not started | - |
 | 06 | 06-client-foundation.md | feat/06-client-foundation | not started | - |
@@ -61,10 +61,16 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 03: Server Inventory & Notifications
-- **Status:** not started
-- **Branch:** feat/03-server-inventory-notifications
-- **Merge Commit:** -
+- **Status:** done
+- **Branch:** feat/03-inventory
+- **Merge Commit:** b185a0e259bb6ae5581c9b8ee63766bcf686f8c2
 - **Acceptance Checks:**
+  - Low-stock episode notification logic: PASS — Creating an item with opening stock and issuing below min level created exactly 1 LOW_STOCK notification for each active STORE_MANAGER and PROCUREMENT_OFFICER; further issues did not re-alert; restocking above min level and dropping below re-armed and triggered a new episode alert.
+  - Balance invariant: PASS — `balance_after` of latest stock movement strictly equals `items.stock_qty`.
+  - Concurrency test: PASS — Parallel requests attempting to issue stock simultaneously prevented negative inventory (one 200, one 409 `INSUFFICIENT_STOCK`).
+  - Notifications API: PASS — List with unread count, mark single notification as read, mark all read.
+  - `npm test`: PASS — 49/49 tests passing across all 4 test suites (`inventory.test.js`, `masters.test.js`, `auth.test.js`, `health.test.js`).
+  - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
 - **Deviations:** None
 - **Open Issues:** None
 
