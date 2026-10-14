@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../src/app.js';
 
 describe('GET /api/health', () => {
+
   it('returns ok status', async () => {
     const res = await request(app).get('/api/health');
     expect(res.status).toBe(200);
