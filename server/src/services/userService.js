@@ -6,6 +6,7 @@ import {
   NotFoundError
 } from '../utils/errors.js';
 import { parsePagination, formatPaginated } from '../utils/pagination.js';
+import { NotificationService } from './notificationService.js';
 
 export class UserService {
   static async listUsers(queryParams = {}) {
@@ -286,12 +287,13 @@ export class UserService {
 
     await query("UPDATE users SET status = 'ACTIVE' WHERE id = ?", [id]);
 
-    // TODO: Replace with NotificationService.notify in Prompt 03
-    await query(
-      `INSERT INTO notifications (user_id, type, message, link, is_read, emailed, is_demo)
-       VALUES (?, 'ACCOUNT_APPROVED', 'Your account has been approved by the administrator.', '/login', 0, 0, ?)`,
-      [id, user.is_demo]
-    );
+    await NotificationService.notify({
+      userIds: [id],
+      type: 'ACCOUNT_APPROVED',
+      message: 'Your account has been approved by the administrator.',
+      link: '/login',
+      isDemo: user.is_demo
+    });
 
     return this.getUserById(id);
   }
