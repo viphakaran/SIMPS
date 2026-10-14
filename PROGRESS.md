@@ -9,7 +9,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 01 | 01-server-core-auth.md | feat/01-server-core-auth | done | 718b931f7ec5e64d7cdbbda3d286e75c69a8b47d |
 | 02 | 02-server-masters.md | feat/02-masters | done | 0d6fc267ff90718d27416cf48b393ca7cd1541cd |
 | 03 | 03-server-inventory-notifications.md | feat/03-inventory | done | b185a0e259bb6ae5581c9b8ee63766bcf686f8c2 |
-| 04 | 04-server-procurement.md | feat/04-server-procurement | not started | - |
+| 04 | 04-server-procurement.md | feat/04-procurement | done | 3b85f66015cd1429477919e047dbaf619957ffe7 |
 | 05 | 05-server-reports.md | feat/05-server-reports | not started | - |
 | 06 | 06-client-foundation.md | feat/06-client-foundation | not started | - |
 | 07 | 07-client-masters-inventory.md | feat/07-client-masters-inventory | not started | - |
@@ -75,10 +75,15 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 04: Server Procurement
-- **Status:** not started
-- **Branch:** feat/04-server-procurement
-- **Merge Commit:** -
+- **Status:** done
+- **Branch:** feat/04-procurement
+- **Merge Commit:** 3b85f66015cd1429477919e047dbaf619957ffe7
 - **Acceptance Checks:**
+  - End-to-end lifecycle (Path A): PASS — Multi-line request created with `REQ-YYYY-NNNNN`, approved by HoD (writing `request_approvals` stage HOD), split across two suppliers into POs (`PO-YYYY-NNNNN`, request status ORDERED, writing `request_approvals` stage PROCUREMENT), confirmed/shipped/delivered by suppliers (`delivered_date` set), received by Store Manager; `items.stock_qty` increased by exactly the PO quantities (10->15 and 2->4) with matching `RECEIPT` movements and exact `balance_after`; request automatically set to `RECEIVED`.
+  - End-to-end lifecycle (Path B): PASS — HoD request routed to `PENDING_PRINCIPAL`, approved by Principal; returned by procurement with reason; cancelling POs recomputes request status back to `APPROVED`.
+  - Scoping and negative checks: PASS — Foreign HoD receives 404/403; self-approval rejected (403); rejection without reason rejected (400 `REASON_REQUIRED`); foreign supplier receives 404; invalid transitions rejected (409); double receive rejected (409 `ALREADY_RECEIVED`); missing HoD/Principal triggers 409 `NO_HOD`/`NO_PRINCIPAL`.
+  - `npm test`: PASS — 60/60 tests passing across all 5 test suites (`procurement.test.js`, `inventory.test.js`, `masters.test.js`, `auth.test.js`, `health.test.js`).
+  - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
 - **Deviations:** None
 - **Open Issues:** None
 
