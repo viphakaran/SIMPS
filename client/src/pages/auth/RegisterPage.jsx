@@ -188,7 +188,7 @@ export function RegisterPage() {
                 >
                   {departments.map((dept) => (
                     <option key={dept.id} value={dept.id}>
-                      {dept.name} ({dept.code})
+                      {dept.name}
                     </option>
                   ))}
                 </select>

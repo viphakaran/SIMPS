@@ -45,36 +45,36 @@ describe('Inventory, Stock Movements & Notifications', () => {
     // 4. Store Manager
     const smRes = await query(
       `INSERT INTO users (name, email, password_hash, role, status)
-       VALUES ('Store Manager User', 'store@ritrkpm.ac.in', ?, 'STORE_MANAGER', 'ACTIVE')`,
+       VALUES ('Store Manager User', 'store@ritrjpm.ac.in', ?, 'STORE_MANAGER', 'ACTIVE')`,
       [testPasswordHash]
     );
     storeManagerId = smRes.insertId;
     const smLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'store@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'store@ritrjpm.ac.in', password: 'Password123' });
     storeManagerToken = smLogin.body.token;
 
     // 5. Procurement Officer
     const poRes = await query(
       `INSERT INTO users (name, email, password_hash, role, status)
-       VALUES ('Procurement Officer User', 'proc@ritrkpm.ac.in', ?, 'PROCUREMENT_OFFICER', 'ACTIVE')`,
+       VALUES ('Procurement Officer User', 'proc@ritrjpm.ac.in', ?, 'PROCUREMENT_OFFICER', 'ACTIVE')`,
       [testPasswordHash]
     );
     procOfficerId = poRes.insertId;
     const poLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'proc@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'proc@ritrjpm.ac.in', password: 'Password123' });
     procOfficerToken = poLogin.body.token;
 
     // 6. Requester
     await query(
       `INSERT INTO users (name, email, password_hash, role, status, department_id)
-       VALUES ('Requester User', 'req@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
+       VALUES ('Requester User', 'req@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
       [testPasswordHash, departmentId]
     );
     const reqLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'req@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'req@ritrjpm.ac.in', password: 'Password123' });
     requesterToken = reqLogin.body.token;
 
     // 7. Supplier User

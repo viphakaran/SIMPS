@@ -31,27 +31,27 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
     // Create an Admin user
     const adminRes = await query(
       `INSERT INTO users (name, email, password_hash, role, status)
-       VALUES ('Admin User', 'admin@ritrkpm.ac.in', ?, 'ADMIN', 'ACTIVE')`,
+       VALUES ('Admin User', 'admin@ritrjpm.ac.in', ?, 'ADMIN', 'ACTIVE')`,
       [testPasswordHash]
     );
-    adminUser = { id: adminRes.insertId, email: 'admin@ritrkpm.ac.in' };
+    adminUser = { id: adminRes.insertId, email: 'admin@ritrjpm.ac.in' };
 
     const adminLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'admin@ritrkpm.ac.in', password: 'AdminPass123' });
+      .send({ email: 'admin@ritrjpm.ac.in', password: 'AdminPass123' });
     adminToken = adminLogin.body.token;
 
     // Create a regular Requester user
     const reqRes = await query(
       `INSERT INTO users (name, email, password_hash, role, status, department_id)
-       VALUES ('Regular Requester', 'req@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
+       VALUES ('Regular Requester', 'req@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
       [testPasswordHash, defaultDeptId]
     );
-    requesterUser = { id: reqRes.insertId, email: 'req@ritrkpm.ac.in' };
+    requesterUser = { id: reqRes.insertId, email: 'req@ritrjpm.ac.in' };
 
     const reqLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'req@ritrkpm.ac.in', password: 'AdminPass123' });
+      .send({ email: 'req@ritrjpm.ac.in', password: 'AdminPass123' });
     requesterToken = reqLogin.body.token;
   });
 
@@ -111,7 +111,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
     it('PUT /api/departments/:id/hod assigns an active HoD belonging to the department', async () => {
       const hodRes = await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Dr. CS HOD', 'cshod@ritrkpm.ac.in', ?, 'HOD', 'ACTIVE', ?)`,
+         VALUES ('Dr. CS HOD', 'cshod@ritrjpm.ac.in', ?, 'HOD', 'ACTIVE', ?)`,
         [testPasswordHash, defaultDeptId]
       );
       const hodUserId = hodRes.insertId;
@@ -132,7 +132,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
       );
       const hodRes = await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Dr. ECE HOD', 'ecehod@ritrkpm.ac.in', ?, 'HOD', 'ACTIVE', ?)`,
+         VALUES ('Dr. ECE HOD', 'ecehod@ritrjpm.ac.in', ?, 'HOD', 'ACTIVE', ?)`,
         [testPasswordHash, otherDept.insertId]
       );
 
@@ -158,7 +158,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
       // Test pending HOD
       const pendingHod = await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Pending HOD', 'penghod@ritrkpm.ac.in', ?, 'HOD', 'PENDING', ?)`,
+         VALUES ('Pending HOD', 'penghod@ritrjpm.ac.in', ?, 'HOD', 'PENDING', ?)`,
         [testPasswordHash, defaultDeptId]
       );
 
@@ -198,7 +198,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Faculty Member',
-          email: 'faculty@ritrkpm.ac.in',
+          email: 'faculty@ritrjpm.ac.in',
           password: 'Password123',
           role: 'REQUESTER',
           departmentId: defaultDeptId
@@ -215,7 +215,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Missing Dept HOD',
-          email: 'nodept@ritrkpm.ac.in',
+          email: 'nodept@ritrjpm.ac.in',
           password: 'Password123',
           role: 'HOD'
         });
@@ -231,7 +231,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Principal 1',
-          email: 'principal1@ritrkpm.ac.in',
+          email: 'principal1@ritrjpm.ac.in',
           password: 'Password123',
           role: 'PRINCIPAL'
         });
@@ -246,7 +246,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Principal 2',
-          email: 'principal2@ritrkpm.ac.in',
+          email: 'principal2@ritrjpm.ac.in',
           password: 'Password123',
           role: 'PRINCIPAL'
         });
@@ -257,7 +257,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
       // Create a pending Principal via direct DB insert and attempt approving
       const pendingPrin = await query(
         `INSERT INTO users (name, email, password_hash, role, status)
-         VALUES ('Pending Principal', 'penprin@ritrkpm.ac.in', ?, 'PRINCIPAL', 'PENDING')`,
+         VALUES ('Pending Principal', 'penprin@ritrjpm.ac.in', ?, 'PRINCIPAL', 'PENDING')`,
         [testPasswordHash]
       );
 
@@ -272,7 +272,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
     it('approves a PENDING user and creates ACCOUNT_APPROVED notification', async () => {
       const pendingRes = await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Pending Requester', 'pendingreq@ritrkpm.ac.in', ?, 'REQUESTER', 'PENDING', ?)`,
+         VALUES ('Pending Requester', 'pendingreq@ritrjpm.ac.in', ?, 'REQUESTER', 'PENDING', ?)`,
         [testPasswordHash, defaultDeptId]
       );
       const pendingId = pendingRes.insertId;
@@ -410,7 +410,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Dr. Mech HOD',
-          email: 'mechhod@ritrkpm.ac.in',
+          email: 'mechhod@ritrjpm.ac.in',
           password: 'Password123',
           role: 'HOD',
           departmentId: mechDeptId
@@ -431,7 +431,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
         .post('/api/auth/register')
         .send({
           name: 'Mech Student Lab Incharge',
-          email: 'mechstudent@ritrkpm.ac.in',
+          email: 'mechstudent@ritrjpm.ac.in',
           password: 'Password123',
           phone: '9876543210',
           departmentId: mechDeptId
@@ -443,7 +443,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
       // Verify login before approval is forbidden
       const preLogin = await request(app)
         .post('/api/auth/login')
-        .send({ email: 'mechstudent@ritrkpm.ac.in', password: 'Password123' });
+        .send({ email: 'mechstudent@ritrjpm.ac.in', password: 'Password123' });
       expect(preLogin.status).toBe(403);
       expect(preLogin.body.error.code).toBe('ACCOUNT_PENDING');
 
@@ -457,7 +457,7 @@ describe('Masters: Users, Departments, Categories, Suppliers', () => {
       // 6. Student can now log in
       const postLogin = await request(app)
         .post('/api/auth/login')
-        .send({ email: 'mechstudent@ritrkpm.ac.in', password: 'Password123' });
+        .send({ email: 'mechstudent@ritrjpm.ac.in', password: 'Password123' });
       expect(postLogin.status).toBe(200);
       expect(postLogin.body).toHaveProperty('token');
       expect(postLogin.body.user.status).toBe('ACTIVE');

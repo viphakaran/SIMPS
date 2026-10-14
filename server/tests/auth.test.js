@@ -57,7 +57,7 @@ describe('Server Core, Auth & System Endpoints', () => {
       const hash = await bcrypt.hash('Password123', 12);
       await query(
         `INSERT INTO users (name, email, password_hash, role, status, is_demo)
-         VALUES ('Demo User', 'demo@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', 1)`,
+         VALUES ('Demo User', 'demo@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', 1)`,
         [hash]
       );
 
@@ -80,7 +80,7 @@ describe('Server Core, Auth & System Endpoints', () => {
         .post('/api/auth/register')
         .send({
           name: 'Jane Doe',
-          email: 'jane@ritrkpm.ac.in',
+          email: 'jane@ritrjpm.ac.in',
           password: 'Password123',
           phone: '9876543210',
           departmentId: activeDepartmentId
@@ -88,14 +88,14 @@ describe('Server Core, Auth & System Endpoints', () => {
 
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty('id');
-      expect(res.body.email).toBe('jane@ritrkpm.ac.in');
+      expect(res.body.email).toBe('jane@ritrjpm.ac.in');
       expect(res.body.role).toBe('REQUESTER');
       expect(res.body.status).toBe('PENDING');
       expect(res.body).not.toHaveProperty('passwordHash');
       expect(res.body).not.toHaveProperty('password_hash');
 
       // Verify DB row
-      const [user] = await query('SELECT * FROM users WHERE email = ?', ['jane@ritrkpm.ac.in']);
+      const [user] = await query('SELECT * FROM users WHERE email = ?', ['jane@ritrjpm.ac.in']);
       expect(user.status).toBe('PENDING');
       expect(user.role).toBe('REQUESTER');
     });
@@ -103,7 +103,7 @@ describe('Server Core, Auth & System Endpoints', () => {
     it('rejects duplicate email with 409 Conflict', async () => {
       const payload = {
         name: 'Jane Doe',
-        email: 'duplicate@ritrkpm.ac.in',
+        email: 'duplicate@ritrjpm.ac.in',
         password: 'Password123',
         departmentId: activeDepartmentId
       };
@@ -121,7 +121,7 @@ describe('Server Core, Auth & System Endpoints', () => {
         .post('/api/auth/register')
         .send({
           name: 'Hacker',
-          email: 'hacker@ritrkpm.ac.in',
+          email: 'hacker@ritrjpm.ac.in',
           password: 'Password123',
           departmentId: activeDepartmentId,
           role: 'ADMIN'
@@ -136,7 +136,7 @@ describe('Server Core, Auth & System Endpoints', () => {
         .post('/api/auth/register')
         .send({
           name: 'No Dept',
-          email: 'nodept@ritrkpm.ac.in',
+          email: 'nodept@ritrjpm.ac.in',
           password: 'Password123',
           departmentId: 99999
         });
@@ -150,7 +150,7 @@ describe('Server Core, Auth & System Endpoints', () => {
         .post('/api/auth/register')
         .send({
           name: 'Weak Pass',
-          email: 'weak@ritrkpm.ac.in',
+          email: 'weak@ritrjpm.ac.in',
           password: 'short',
           departmentId: activeDepartmentId
         });
@@ -170,21 +170,21 @@ describe('Server Core, Auth & System Endpoints', () => {
     it('logs in an ACTIVE user and returns JWT and user profile', async () => {
       await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Active User', 'active@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
+         VALUES ('Active User', 'active@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
         [passwordHash, activeDepartmentId]
       );
 
       const res = await request(app)
         .post('/api/auth/login')
         .send({
-          email: 'ACTIVE@RITRKPM.AC.IN', // verify case insensitivity
+          email: 'ACTIVE@RITRJPM.AC.IN', // verify case insensitivity
           password: 'Password123'
         });
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('token');
       expect(res.body.user).toMatchObject({
-        email: 'active@ritrkpm.ac.in',
+        email: 'active@ritrjpm.ac.in',
         role: 'REQUESTER',
         status: 'ACTIVE'
       });
@@ -194,14 +194,14 @@ describe('Server Core, Auth & System Endpoints', () => {
     it('returns generic 401 INVALID_CREDENTIALS for wrong password', async () => {
       await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Active User', 'active@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
+         VALUES ('Active User', 'active@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
         [passwordHash, activeDepartmentId]
       );
 
       const res = await request(app)
         .post('/api/auth/login')
         .send({
-          email: 'active@ritrkpm.ac.in',
+          email: 'active@ritrjpm.ac.in',
           password: 'WrongPassword999'
         });
 
@@ -213,7 +213,7 @@ describe('Server Core, Auth & System Endpoints', () => {
       const res = await request(app)
         .post('/api/auth/login')
         .send({
-          email: 'nonexistent@ritrkpm.ac.in',
+          email: 'nonexistent@ritrjpm.ac.in',
           password: 'Password123'
         });
 
@@ -224,14 +224,14 @@ describe('Server Core, Auth & System Endpoints', () => {
     it('returns 403 ACCOUNT_PENDING when user status is PENDING', async () => {
       await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Pending User', 'pending@ritrkpm.ac.in', ?, 'REQUESTER', 'PENDING', ?)`,
+         VALUES ('Pending User', 'pending@ritrjpm.ac.in', ?, 'REQUESTER', 'PENDING', ?)`,
         [passwordHash, activeDepartmentId]
       );
 
       const res = await request(app)
         .post('/api/auth/login')
         .send({
-          email: 'pending@ritrkpm.ac.in',
+          email: 'pending@ritrjpm.ac.in',
           password: 'Password123'
         });
 
@@ -242,14 +242,14 @@ describe('Server Core, Auth & System Endpoints', () => {
     it('returns 403 ACCOUNT_DISABLED when user status is DISABLED', async () => {
       await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Disabled User', 'disabled@ritrkpm.ac.in', ?, 'REQUESTER', 'DISABLED', ?)`,
+         VALUES ('Disabled User', 'disabled@ritrjpm.ac.in', ?, 'REQUESTER', 'DISABLED', ?)`,
         [passwordHash, activeDepartmentId]
       );
 
       const res = await request(app)
         .post('/api/auth/login')
         .send({
-          email: 'disabled@ritrkpm.ac.in',
+          email: 'disabled@ritrjpm.ac.in',
           password: 'Password123'
         });
 
@@ -266,14 +266,14 @@ describe('Server Core, Auth & System Endpoints', () => {
       const hash = await bcrypt.hash('Password123', 12);
       const userRes = await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Active User', 'active@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
+         VALUES ('Active User', 'active@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
         [hash, activeDepartmentId]
       );
       userId = userRes.insertId;
 
       const loginRes = await request(app)
         .post('/api/auth/login')
-        .send({ email: 'active@ritrkpm.ac.in', password: 'Password123' });
+        .send({ email: 'active@ritrjpm.ac.in', password: 'Password123' });
       token = loginRes.body.token;
     });
 
@@ -284,7 +284,7 @@ describe('Server Core, Auth & System Endpoints', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(userId);
-      expect(res.body.email).toBe('active@ritrkpm.ac.in');
+      expect(res.body.email).toBe('active@ritrjpm.ac.in');
       expect(res.body.departmentName).toBe('Computer Science');
     });
 
@@ -311,13 +311,13 @@ describe('Server Core, Auth & System Endpoints', () => {
       const hash = await bcrypt.hash('OldPassword1', 12);
       await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Pass User', 'pass@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
+         VALUES ('Pass User', 'pass@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
         [hash, activeDepartmentId]
       );
 
       const loginRes = await request(app)
         .post('/api/auth/login')
-        .send({ email: 'pass@ritrkpm.ac.in', password: 'OldPassword1' });
+        .send({ email: 'pass@ritrjpm.ac.in', password: 'OldPassword1' });
       token = loginRes.body.token;
     });
 
@@ -335,13 +335,13 @@ describe('Server Core, Auth & System Endpoints', () => {
       // Verify login with old password fails
       const failLogin = await request(app)
         .post('/api/auth/login')
-        .send({ email: 'pass@ritrkpm.ac.in', password: 'OldPassword1' });
+        .send({ email: 'pass@ritrjpm.ac.in', password: 'OldPassword1' });
       expect(failLogin.status).toBe(401);
 
       // Verify login with new password succeeds
       const successLogin = await request(app)
         .post('/api/auth/login')
-        .send({ email: 'pass@ritrkpm.ac.in', password: 'NewPassword2' });
+        .send({ email: 'pass@ritrjpm.ac.in', password: 'NewPassword2' });
       expect(successLogin.status).toBe(200);
     });
 
@@ -364,13 +364,13 @@ describe('Server Core, Auth & System Endpoints', () => {
       const hash = await bcrypt.hash('Password123', 12);
       await query(
         `INSERT INTO users (name, email, password_hash, role, status, department_id)
-         VALUES ('Requester User', 'req@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
+         VALUES ('Requester User', 'req@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
         [hash, activeDepartmentId]
       );
 
       const loginRes = await request(app)
         .post('/api/auth/login')
-        .send({ email: 'req@ritrkpm.ac.in', password: 'Password123' });
+        .send({ email: 'req@ritrjpm.ac.in', password: 'Password123' });
       const reqToken = loginRes.body.token;
 
       const res = await request(testAuthApp)
@@ -385,13 +385,13 @@ describe('Server Core, Auth & System Endpoints', () => {
       const hash = await bcrypt.hash('Password123', 12);
       await query(
         `INSERT INTO users (name, email, password_hash, role, status)
-         VALUES ('Admin User', 'admin@ritrkpm.ac.in', ?, 'ADMIN', 'ACTIVE')`,
+         VALUES ('Admin User', 'admin@ritrjpm.ac.in', ?, 'ADMIN', 'ACTIVE')`,
         [hash]
       );
 
       const loginRes = await request(app)
         .post('/api/auth/login')
-        .send({ email: 'admin@ritrkpm.ac.in', password: 'Password123' });
+        .send({ email: 'admin@ritrjpm.ac.in', password: 'Password123' });
       const adminToken = loginRes.body.token;
 
       const res = await request(testAuthApp)

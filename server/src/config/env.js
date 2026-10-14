@@ -25,7 +25,7 @@ const envSchema = z.object({
   SMTP_PORT: z.coerce.number().optional().default(587),
   SMTP_USER: z.string().optional().default(''),
   SMTP_PASS: z.string().optional().default(''),
-  MAIL_FROM: z.string().optional().default('noreply@ritrkpm.ac.in')
+  MAIL_FROM: z.string().optional().default('noreply@ritrjpm.ac.in')
 });
 
 const parsed = envSchema.safeParse(process.env);

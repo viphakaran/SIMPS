@@ -38,29 +38,29 @@ describe('Reports, Analytics & Scheduler', () => {
     // 2. Admin
     await query(
       `INSERT INTO users (name, email, password_hash, role, status)
-       VALUES ('Admin User', 'admin@ritrkpm.ac.in', ?, 'ADMIN', 'ACTIVE')`,
+       VALUES ('Admin User', 'admin@ritrjpm.ac.in', ?, 'ADMIN', 'ACTIVE')`,
       [testPasswordHash]
     );
     const adminLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'admin@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'admin@ritrjpm.ac.in', password: 'Password123' });
     adminToken = adminLogin.body.token;
 
     // 3. Principal
     await query(
       `INSERT INTO users (name, email, password_hash, role, status)
-       VALUES ('Principal User', 'principal@ritrkpm.ac.in', ?, 'PRINCIPAL', 'ACTIVE')`,
+       VALUES ('Principal User', 'principal@ritrjpm.ac.in', ?, 'PRINCIPAL', 'ACTIVE')`,
       [testPasswordHash]
     );
     const priLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'principal@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'principal@ritrjpm.ac.in', password: 'Password123' });
     principalToken = priLogin.body.token;
 
     // 4. HoD CSE
     const hod1Res = await query(
       `INSERT INTO users (name, email, password_hash, role, status, department_id)
-       VALUES ('HoD CSE', 'hod.cse@ritrkpm.ac.in', ?, 'HOD', 'ACTIVE', ?)`,
+       VALUES ('HoD CSE', 'hod.cse@ritrjpm.ac.in', ?, 'HOD', 'ACTIVE', ?)`,
       [testPasswordHash, deptCseId]
     );
     await query('UPDATE departments SET hod_user_id = ? WHERE id = ?', [
@@ -69,13 +69,13 @@ describe('Reports, Analytics & Scheduler', () => {
     ]);
     const hod1Login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'hod.cse@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'hod.cse@ritrjpm.ac.in', password: 'Password123' });
     hodCseToken = hod1Login.body.token;
 
     // 5. HoD ECE
     const hod2Res = await query(
       `INSERT INTO users (name, email, password_hash, role, status, department_id)
-       VALUES ('HoD ECE', 'hod.ece@ritrkpm.ac.in', ?, 'HOD', 'ACTIVE', ?)`,
+       VALUES ('HoD ECE', 'hod.ece@ritrjpm.ac.in', ?, 'HOD', 'ACTIVE', ?)`,
       [testPasswordHash, deptEceId]
     );
     await query('UPDATE departments SET hod_user_id = ? WHERE id = ?', [
@@ -84,41 +84,41 @@ describe('Reports, Analytics & Scheduler', () => {
     ]);
     const hod2Login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'hod.ece@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'hod.ece@ritrjpm.ac.in', password: 'Password123' });
     hodEceToken = hod2Login.body.token;
 
     // 6. Requester CSE
     const reqRes = await query(
       `INSERT INTO users (name, email, password_hash, role, status, department_id)
-       VALUES ('Faculty CSE', 'faculty.cse@ritrkpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
+       VALUES ('Faculty CSE', 'faculty.cse@ritrjpm.ac.in', ?, 'REQUESTER', 'ACTIVE', ?)`,
       [testPasswordHash, deptCseId]
     );
     reqCseId = reqRes.insertId;
     const reqLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'faculty.cse@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'faculty.cse@ritrjpm.ac.in', password: 'Password123' });
     reqCseToken = reqLogin.body.token;
 
     // 7. Procurement Officer
     await query(
       `INSERT INTO users (name, email, password_hash, role, status)
-       VALUES ('Proc Officer', 'proc@ritrkpm.ac.in', ?, 'PROCUREMENT_OFFICER', 'ACTIVE')`,
+       VALUES ('Proc Officer', 'proc@ritrjpm.ac.in', ?, 'PROCUREMENT_OFFICER', 'ACTIVE')`,
       [testPasswordHash]
     );
     const procLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'proc@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'proc@ritrjpm.ac.in', password: 'Password123' });
     procOfficerToken = procLogin.body.token;
 
     // 8. Store Manager
     await query(
       `INSERT INTO users (name, email, password_hash, role, status)
-       VALUES ('Store Manager', 'store@ritrkpm.ac.in', ?, 'STORE_MANAGER', 'ACTIVE')`,
+       VALUES ('Store Manager', 'store@ritrjpm.ac.in', ?, 'STORE_MANAGER', 'ACTIVE')`,
       [testPasswordHash]
     );
     const smLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'store@ritrkpm.ac.in', password: 'Password123' });
+      .send({ email: 'store@ritrjpm.ac.in', password: 'Password123' });
     storeManagerToken = smLogin.body.token;
 
     // 9. Supplier

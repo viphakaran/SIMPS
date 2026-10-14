@@ -52,7 +52,7 @@ export class NotificationService {
       if (transporter && recipient.email) {
         try {
           await transporter.sendMail({
-            from: env.MAIL_FROM || 'noreply@ritrkpm.ac.in',
+            from: env.MAIL_FROM || 'noreply@ritrjpm.ac.in',
             to: recipient.email,
             subject: `[SIMPS] ${type.replace(/_/g, ' ')}`,
             text: message,
