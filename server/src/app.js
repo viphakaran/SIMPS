@@ -6,6 +6,10 @@ import env from './config/env.js';
 import { AppError } from './utils/errors.js';
 import systemRoutes from './routes/systemRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import departmentRoutes from './routes/departmentRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import supplierRoutes from './routes/supplierRoutes.js';
 
 const app = express();
 
@@ -25,6 +29,10 @@ if (env.NODE_ENV !== 'test') {
 // Mount routes
 app.use('/api', systemRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/suppliers', supplierRoutes);
 
 // 404 Not Found handler
 app.use((req, res, _next) => {
