@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { SupplierController } from '../controllers/supplierController.js';
+import { ReportController } from '../controllers/reportController.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import {
@@ -15,6 +16,12 @@ router.get(
   '/',
   authorize('ADMIN', 'PRINCIPAL', 'PROCUREMENT_OFFICER', 'STORE_MANAGER'),
   SupplierController.list
+);
+
+router.get(
+  '/:id/performance',
+  authorize('ADMIN', 'PRINCIPAL', 'PROCUREMENT_OFFICER'),
+  ReportController.getSupplierPerformance
 );
 
 router.get(

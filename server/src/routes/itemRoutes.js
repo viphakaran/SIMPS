@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { ItemController } from '../controllers/itemController.js';
+import { ReportController } from '../controllers/reportController.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import {
@@ -23,6 +24,7 @@ const nonSupplierRoles = [
   'STORE_MANAGER'
 ];
 
+router.get('/reorder-suggestions', authorize('STORE_MANAGER', 'PROCUREMENT_OFFICER'), ReportController.getReorderSuggestions);
 router.get('/', authorize(...nonSupplierRoles), ItemController.list);
 router.get('/:id', authorize(...nonSupplierRoles), ItemController.getById);
 router.get('/:id/movements', authorize(...nonSupplierRoles), ItemController.getItemMovements);

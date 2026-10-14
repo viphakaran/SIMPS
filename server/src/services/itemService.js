@@ -7,6 +7,8 @@ import {
 import { parsePagination, formatPaginated } from '../utils/pagination.js';
 import { StockService, deriveItemStatus } from './stockService.js';
 
+export { deriveItemStatus };
+
 export class ItemService {
   static async listItems(queryParams = {}) {
     const { page, pageSize, limit, offset, search } = parsePagination(queryParams);
