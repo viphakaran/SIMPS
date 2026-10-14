@@ -13,6 +13,8 @@ import supplierRoutes from './routes/supplierRoutes.js';
 import itemRoutes from './routes/itemRoutes.js';
 import stockMovementRoutes from './routes/stockMovementRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
+import requestRoutes from './routes/requestRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 
 const app = express();
 
@@ -39,6 +41,8 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/stock-movements', stockMovementRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/requests', requestRoutes);
+app.use('/api/orders', orderRoutes);
 
 // 404 Not Found handler
 app.use((req, res, _next) => {
