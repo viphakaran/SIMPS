@@ -10,7 +10,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 02 | 02-server-masters.md | feat/02-masters | done | 0d6fc267ff90718d27416cf48b393ca7cd1541cd |
 | 03 | 03-server-inventory-notifications.md | feat/03-inventory | done | b185a0e259bb6ae5581c9b8ee63766bcf686f8c2 |
 | 04 | 04-server-procurement.md | feat/04-procurement | done | 3b85f66015cd1429477919e047dbaf619957ffe7 |
-| 05 | 05-server-reports.md | feat/05-server-reports | not started | - |
+| 05 | 05-server-reports.md | feat/05-reports | done | f47fa087c58bf8347a5cb026e47d5d6e61875e1a |
 | 06 | 06-client-foundation.md | feat/06-client-foundation | not started | - |
 | 07 | 07-client-masters-inventory.md | feat/07-client-masters-inventory | not started | - |
 | 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement-dashboards | not started | - |
@@ -88,10 +88,17 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 05: Server Reports
-- **Status:** not started
-- **Branch:** feat/05-server-reports
-- **Merge Commit:** -
+- **Status:** done
+- **Branch:** feat/05-reports
+- **Merge Commit:** f47fa087c58bf8347a5cb026e47d5d6e61875e1a
 - **Acceptance Checks:**
+  - Empty Database Check: PASS — With an empty database, every report (`reorder-suggestions`, `suppliers`, `inventory`, `procurement`) and all 7 role dashboards return valid empty results with zeros/empty arrays, with zero fabricated or mock data.
+  - Hand-calculated fixtures: PASS — Small known fixtures verified against mathematical formulas: Reorder suggestions (avg_daily, days_of_cover, on_order, suggested_qty, insufficient_data), Supplier performance (total orders excluding cancelled, delivered count, on-time rate 0.50, avg lead days 10.0), Inventory valuation (150,000), Procurement spend by month/dept.
+  - Department Scoping: PASS — HoD in procurement report strictly sees only own department's counts and spend.
+  - CSV Export: PASS — `?format=csv` streams properly formatted and escaped CSV for inventory, procurement, and supplier reports.
+  - Daily Scheduler: PASS — `runDailyStockDigest()` queries low/out stock items and creates daily digest notification for procurement officers; skips when none.
+  - `npm test`: PASS — 66/66 tests passing across all 6 test suites (`reports.test.js`, `procurement.test.js`, `inventory.test.js`, `masters.test.js`, `auth.test.js`, `health.test.js`).
+  - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
 - **Deviations:** None
 - **Open Issues:** None
 
