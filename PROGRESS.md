@@ -7,7 +7,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 |---|---|---|---|---|
 | 00 | 00-scaffold.md | feat/00-scaffold | done | b19d7af6cae3c2f679bb4398c6c980c611fb63bc |
 | 01 | 01-server-core-auth.md | feat/01-server-core-auth | done | 718b931f7ec5e64d7cdbbda3d286e75c69a8b47d |
-| 02 | 02-server-masters.md | feat/02-server-masters | not started | - |
+| 02 | 02-server-masters.md | feat/02-masters | done | 0d6fc267ff90718d27416cf48b393ca7cd1541cd |
 | 03 | 03-server-inventory-notifications.md | feat/03-server-inventory-notifications | not started | - |
 | 04 | 04-server-procurement.md | feat/04-server-procurement | not started | - |
 | 05 | 05-server-reports.md | feat/05-server-reports | not started | - |
@@ -49,10 +49,14 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 02: Server Masters
-- **Status:** not started
-- **Branch:** feat/02-server-masters
-- **Merge Commit:** -
+- **Status:** done
+- **Branch:** feat/02-masters
+- **Merge Commit:** 0d6fc267ff90718d27416cf48b393ca7cd1541cd
 - **Acceptance Checks:**
+  - Admin department & HoD workflow: PASS — Admin created department, created HoD, assigned HoD; REQUESTER self-registered, was approved, and logged in.
+  - Role restrictions: PASS — Second active PRINCIPAL rejected (409 `PRINCIPAL_EXISTS`); HoD belonging to another department rejected (400 `HOD_WRONG_DEPARTMENT`); admin self-disable rejected (400 `CANNOT_DISABLE_SELF`).
+  - `npm test`: PASS — 41/41 tests passing across `masters.test.js`, `auth.test.js`, `health.test.js`.
+  - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
 - **Deviations:** None
 - **Open Issues:** None
 
