@@ -6,7 +6,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | Phase | Prompt | Branch | Status | Merge Commit |
 |---|---|---|---|---|
 | 00 | 00-scaffold.md | feat/00-scaffold | done | b19d7af6cae3c2f679bb4398c6c980c611fb63bc |
-| 01 | 01-server-core-auth.md | feat/01-server-core-auth | not started | - |
+| 01 | 01-server-core-auth.md | feat/01-server-core-auth | done | 718b931f7ec5e64d7cdbbda3d286e75c69a8b47d |
 | 02 | 02-server-masters.md | feat/02-server-masters | not started | - |
 | 03 | 03-server-inventory-notifications.md | feat/03-server-inventory-notifications | not started | - |
 | 04 | 04-server-procurement.md | feat/04-server-procurement | not started | - |
@@ -36,10 +36,15 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 01: Server Core & Auth
-- **Status:** not started
+- **Status:** done
 - **Branch:** feat/01-server-core-auth
-- **Merge Commit:** -
+- **Merge Commit:** 718b931f7ec5e64d7cdbbda3d286e75c69a8b47d
 - **Acceptance Checks:**
+  - `npm run migrate`: PASS — Initial run created all tables in `smartinv`; running second time verified zero changes (idempotent).
+  - `npm run create-admin`: PASS — Created active ADMIN account, rejected duplicate email creation, login returned valid JWT, `/api/auth/me` succeeded, tampered token returned 401.
+  - Role registration restriction: PASS — Attempting to self-register with role other than REQUESTER returned 400 validation error.
+  - `npm test`: PASS — 22/22 integration tests passed across `auth.test.js` and `health.test.js`.
+  - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
 - **Deviations:** None
 - **Open Issues:** None
 
