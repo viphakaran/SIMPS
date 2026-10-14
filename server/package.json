@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
-    "migrate": "node src/config/migrate.js",
-    "create-admin": "node src/utils/createAdmin.js"
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --runInBand --forceExit",
+    "migrate": "node scripts/migrate.js",
+    "create-admin": "node scripts/create-admin.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
