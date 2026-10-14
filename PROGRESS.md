@@ -11,7 +11,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 03 | 03-server-inventory-notifications.md | feat/03-inventory | done | b185a0e259bb6ae5581c9b8ee63766bcf686f8c2 |
 | 04 | 04-server-procurement.md | feat/04-procurement | done | 3b85f66015cd1429477919e047dbaf619957ffe7 |
 | 05 | 05-server-reports.md | feat/05-reports | done | f47fa087c58bf8347a5cb026e47d5d6e61875e1a |
-| 06 | 06-client-foundation.md | feat/06-client-foundation | not started | - |
+| 06 | 06-client-foundation.md | feat/06-client-foundation | done | 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab |
 | 07 | 07-client-masters-inventory.md | feat/07-client-masters-inventory | not started | - |
 | 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement-dashboards | not started | - |
 | 09 | 09-demo-data.md | feat/09-demo-data | not started | - |
@@ -103,10 +103,20 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 06: Client Foundation
-- **Status:** not started
+- **Status:** done
 - **Branch:** feat/06-client-foundation
-- **Merge Commit:** -
+- **Merge Commit:** 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab
 - **Acceptance Checks:**
+  - Stack and Tokens: PASS — React Router 6, Bootstrap 5, bootstrap-icons, `@fontsource/inter`, axios, Recharts configured; `client/src/styles/theme.css` overrides Bootstrap tokens matching `docs/UI.md`.
+  - API Client: PASS — Axios instance configured with bearer token injection from sessionStorage, 401 clearing and redirect to `/login`, and standard error normalization.
+  - AuthContext: PASS — Persistent session restoration via `GET /api/auth/me`, login, logout, registration, and change-password workflows.
+  - App Shell & Navigation: PASS — Fixed 240px sidebar on desktop, offcanvas navigation on mobile (<992px); role-scoped navigation filtering; notification bell showing live unread count; user dropdown with change password modal; demo data warning banner driven by `GET /api/meta`.
+  - Route Guards & Error Pages: PASS — `ProtectedRoute` and `RoleRoute` protecting authenticated paths and role scopes; dedicated `/403` Forbidden and `/404` Not Found error pages.
+  - Shared Components: PASS — All components from `docs/UI.md` implemented: DataTable (server pagination, search, sorting), StatusBadge (color mapping), PageHeader, Card, StatCard, Modal, ConfirmDialog, ConfirmReason, Toast/ToastProvider, FormField, EmptyState, LoadingState, ErrorState, Timeline.
+  - Auth Pages: PASS — `LoginPage` with pending account detection and inline error display; `RegisterPage` with dynamic department loading (`/api/departments/public`) and post-submission pending approval confirmation state.
+  - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
+  - `npm run build -w client`: PASS — Vite production bundle generated cleanly with 0 errors.
+  - `npm test`: PASS — All 66 server test suites passing.
 - **Deviations:** None
 - **Open Issues:** None
 
