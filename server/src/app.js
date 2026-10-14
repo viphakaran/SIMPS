@@ -10,6 +10,9 @@ import userRoutes from './routes/userRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import supplierRoutes from './routes/supplierRoutes.js';
+import itemRoutes from './routes/itemRoutes.js';
+import stockMovementRoutes from './routes/stockMovementRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 const app = express();
 
@@ -33,6 +36,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/suppliers', supplierRoutes);
+app.use('/api/items', itemRoutes);
+app.use('/api/stock-movements', stockMovementRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // 404 Not Found handler
 app.use((req, res, _next) => {
