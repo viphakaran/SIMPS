@@ -7,6 +7,8 @@ coverage/
 .DS_Store
 .env.e2e
 client/.env.e2e
+test-results/
+playwright-report/
 client/test-results/
 client/playwright-report/
 *.timestamp-*.mjs

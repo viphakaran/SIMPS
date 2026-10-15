@@ -14,6 +14,22 @@ export function AppLayout() {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [offcanvasOpen, setOffcanvasOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [notifMenuOpen, setNotifMenuOpen] = useState(false);
+  const [recentNotifications, setRecentNotifications] = useState([]);
+
+  const handleToggleNotifMenu = async () => {
+    const nextState = !notifMenuOpen;
+    setNotifMenuOpen(nextState);
+    if (nextState) {
+      setUserMenuOpen(false);
+      try {
+        const res = await apiClient.get('/notifications?pageSize=5');
+        setRecentNotifications(res.data.data || res.data || []);
+      } catch {
+        // Non-blocking
+      }
+    }
+  };
 
   // Fetch demo data flag and notification unread count
   useEffect(() => {
@@ -208,29 +224,117 @@ export function AppLayout() {
         </div>
 
         <div className="d-flex align-items-center gap-3">
-          {/* Notification Bell */}
-          <button
-            type="button"
-            className="btn btn-light position-relative p-2 rounded-circle"
-            onClick={() => navigate('/notifications')}
-            title="Notifications"
-          >
-            <i className="bi bi-bell text-muted fs-5"></i>
-            {unreadCount > 0 && (
-              <span
-                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                style={{ fontSize: '10px' }}
-              >
-                {unreadCount > 99 ? '99+' : unreadCount}
-                <span className="visually-hidden">unread notifications</span>
-              </span>
-            )}
-          </button>
+          {/* Notification Bell Dropdown */}
+          <div className={`dropdown ${notifMenuOpen ? 'show' : ''}`}>
+            <button
+              id="notif-menu-btn"
+              type="button"
+              className="btn btn-light position-relative p-2 rounded-circle"
+              onClick={handleToggleNotifMenu}
+              aria-expanded={notifMenuOpen}
+              title="Notifications"
+            >
+              <i className="bi bi-bell text-muted fs-5"></i>
+              {unreadCount > 0 && (
+                <span
+                  className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  style={{ fontSize: '10px' }}
+                >
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                  <span className="visually-hidden">unread notifications</span>
+                </span>
+              )}
+            </button>
+
+            <ul
+              className={`dropdown-menu dropdown-menu-end shadow border-0 mt-2 p-0 ${notifMenuOpen ? 'show' : ''}`}
+              style={{ position: 'absolute', right: 0, left: 'auto', width: '320px', maxWidth: '90vw' }}
+            >
+              <li className="p-3 border-bottom d-flex justify-content-between align-items-center bg-light rounded-top">
+                <span className="fw-semibold text-dark small">Notifications</span>
+                {unreadCount > 0 && (
+                  <button
+                    type="button"
+                    className="btn btn-link p-0 text-decoration-none small"
+                    style={{ fontSize: '12px' }}
+                    onClick={async () => {
+                      try {
+                        await apiClient.post('/notifications/read-all');
+                        setUnreadCount(0);
+                        setRecentNotifications((prev) => prev.map((n) => ({ ...n, isRead: 1 })));
+                      } catch {
+                        // Non-blocking
+                      }
+                    }}
+                  >
+                    Mark all read
+                  </button>
+                )}
+              </li>
+
+              <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
+                {recentNotifications.length === 0 ? (
+                  <li className="p-3 text-center text-muted small">No notifications</li>
+                ) : (
+                  recentNotifications.map((n) => (
+                    <li
+                      key={n.id}
+                      className={`p-2 px-3 border-bottom ${!n.isRead ? 'bg-light' : ''}`}
+                      style={{ cursor: 'pointer' }}
+                      onClick={async () => {
+                        if (!n.isRead) {
+                          try {
+                            await apiClient.patch(`/notifications/${n.id}/read`);
+                            setUnreadCount((c) => Math.max(0, c - 1));
+                            setRecentNotifications((prev) =>
+                              prev.map((item) => (item.id === n.id ? { ...item, isRead: 1 } : item))
+                            );
+                          } catch {
+                            // Non-blocking
+                          }
+                        }
+                        setNotifMenuOpen(false);
+                        navigate('/notifications');
+                      }}
+                    >
+                      <div className="d-flex justify-content-between align-items-start mb-1">
+                        <strong className="small text-dark" style={{ fontSize: '13px' }}>
+                          {n.title}
+                        </strong>
+                        {!n.isRead && (
+                          <span className="badge rounded-pill bg-primary" style={{ fontSize: '7px' }}>
+                            NEW
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-muted small text-truncate" style={{ fontSize: '12px' }}>
+                        {n.message}
+                      </div>
+                    </li>
+                  ))
+                )}
+              </div>
+
+              <li className="p-2 text-center border-top">
+                <button
+                  type="button"
+                  className="btn btn-link btn-sm text-decoration-none w-100 py-1"
+                  onClick={() => {
+                    setNotifMenuOpen(false);
+                    navigate('/notifications');
+                  }}
+                >
+                  View all notifications
+                </button>
+              </li>
+            </ul>
+          </div>
 
           {/* User Menu */}
           {user && (
             <div className={`dropdown ${userMenuOpen ? 'show' : ''}`}>
               <button
+                id="user-menu-btn"
                 className="btn btn-light d-flex align-items-center gap-2 border py-1 px-2 rounded"
                 type="button"
                 onClick={() => setUserMenuOpen((prev) => !prev)}

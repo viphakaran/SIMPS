@@ -12,7 +12,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 04 | 04-server-procurement.md | feat/04-procurement | done | 3b85f66015cd1429477919e047dbaf619957ffe7 |
 | 05 | 05-server-reports.md | feat/05-reports | done | f47fa087c58bf8347a5cb026e47d5d6e61875e1a |
 | 06 | 06-client-foundation.md | feat/06-client-foundation | done | 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab |
-| 07 | 07-client-masters-inventory.md | feat/07-client-masters-inventory | not started | - |
+| 07 | 07-client-masters-inventory.md | feat/07-client-inventory | done | pending-merge |
 | 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement-dashboards | not started | - |
 | 09 | 09-demo-data.md | feat/09-demo-data | not started | - |
 | 10 | 10-tests-docs-hardening.md | feat/10-tests-docs-hardening | not started | - |
@@ -128,11 +128,20 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Deviations:** Introduced `@playwright/test` dev dependency with dedicated `smartinv_e2e` database and ports 5001/5174 to satisfy browser acceptance requirements without touching development data (documented in `docs/CHANGES.md`).
 - **Open Issues:** None
 
-### Phase 07: Client Masters & Inventory
-- **Status:** not started
-- **Branch:** feat/07-client-masters-inventory
-- **Merge Commit:** -
-- **Acceptance Checks:**
+### Phase 07: Client Masters, Inventory & Notifications
+- **Status:** done
+- **Branch:** feat/07-client-inventory
+- **Merge Commit:** pending-merge
+- **Code Checks:**
+  - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
+  - `npm test`: PASS — 66/66 integration tests passed across all 6 test suites.
+  - `npm run build -w client`: PASS — Vite production bundle generated cleanly in 3.05s.
+- **Browser Acceptance Checks (`npx playwright test client/e2e/phase07.spec.js --config client/playwright.config.js`):**
+  - Command: `npx playwright test client/e2e/phase07.spec.js --config client/playwright.config.js` (running against isolated database `smartinv_e2e`, test server port 5001, test client port 5174).
+  - Check 1 (Admin workflow): PASS — Created department "Mechanical Engineering", created HoD user "Dr. Murugan HoD", assigned HoD to department, and approved self-registered requester "Selvi Student" from Pending Approvals tab (7.9s).
+  - Check 2 (Store Manager workflow): PASS — Created category "Electronics & Sensors", created item "Arduino Uno R3 Board" (SKU `ELEC-ARD-001`, unit cost 450, min level 10, opening stock 15), issued 8 units to Computer Science department (stock dropping to 7 < 10 threshold), confirmed status changed to Low Stock, verified exactly 1 low-stock notification arrived in notification inbox, and confirmed movement history ledger on `/items/:id` accurately displays opening stock (+15, balance 15) and issue stock (-8, balance 7) with dates and reasons (4.0s).
+  - Check 3 (Empty database screens): PASS — Verified `/suppliers` empty state displays friendly "No suppliers found" message and "Add Supplier" action button (2.3s).
+  - Combined E2E Suite (`client/e2e/`): PASS — All 9 tests passed across Phase 06 and Phase 07 in 49.2s.
 - **Deviations:** None
 - **Open Issues:** None
 

@@ -13,6 +13,16 @@ import { ForbiddenPage } from './pages/errors/ForbiddenPage.jsx';
 import { NotFoundPage } from './pages/errors/NotFoundPage.jsx';
 import { PlaceholderPage } from './pages/PlaceholderPage.jsx';
 
+import { UsersPage } from './pages/users/UsersPage.jsx';
+import { DepartmentsPage } from './pages/masters/DepartmentsPage.jsx';
+import { CategoriesPage } from './pages/masters/CategoriesPage.jsx';
+import { SuppliersPage } from './pages/suppliers/SuppliersPage.jsx';
+import { SupplierDetailPage } from './pages/suppliers/SupplierDetailPage.jsx';
+import { ItemsPage } from './pages/inventory/ItemsPage.jsx';
+import { ItemDetailPage } from './pages/inventory/ItemDetailPage.jsx';
+import { ReorderPage } from './pages/inventory/ReorderPage.jsx';
+import { NotificationsPage } from './pages/notifications/NotificationsPage.jsx';
+
 export function App() {
   return (
     <BrowserRouter>
@@ -49,10 +59,7 @@ export function App() {
                 path="/items"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'HOD', 'REQUESTER', 'PROCUREMENT_OFFICER', 'STORE_MANAGER']}>
-                    <PlaceholderPage
-                      title="Inventory Catalog"
-                      description="Master stock catalog, live balances, and item transactions."
-                    />
+                    <ItemsPage />
                   </RoleRoute>
                 }
               />
@@ -60,10 +67,7 @@ export function App() {
                 path="/items/:id"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'HOD', 'REQUESTER', 'PROCUREMENT_OFFICER', 'STORE_MANAGER']}>
-                    <PlaceholderPage
-                      title="Item Detail"
-                      description="Item stock movement history, audit trail, and details."
-                    />
+                    <ItemDetailPage />
                   </RoleRoute>
                 }
               />
@@ -71,10 +75,7 @@ export function App() {
                 path="/reorder"
                 element={
                   <RoleRoute allowedRoles={['STORE_MANAGER', 'PROCUREMENT_OFFICER']}>
-                    <PlaceholderPage
-                      title="Reorder Suggestions"
-                      description="Automated reorder triggers based on safety thresholds."
-                    />
+                    <ReorderPage />
                   </RoleRoute>
                 }
               />
@@ -165,10 +166,7 @@ export function App() {
                 path="/suppliers"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'PROCUREMENT_OFFICER', 'STORE_MANAGER']}>
-                    <PlaceholderPage
-                      title="Suppliers"
-                      description="Approved supplier directory and performance metrics."
-                    />
+                    <SuppliersPage />
                   </RoleRoute>
                 }
               />
@@ -176,10 +174,7 @@ export function App() {
                 path="/suppliers/:id"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'PROCUREMENT_OFFICER', 'STORE_MANAGER']}>
-                    <PlaceholderPage
-                      title="Supplier Profile"
-                      description="Supplier contacts, fulfilled orders, and delivery metrics."
-                    />
+                    <SupplierDetailPage />
                   </RoleRoute>
                 }
               />
@@ -187,10 +182,7 @@ export function App() {
                 path="/users"
                 element={
                   <RoleRoute allowedRoles={['ADMIN']}>
-                    <PlaceholderPage
-                      title="Users"
-                      description="User administration, account approval queue, and role assignments."
-                    />
+                    <UsersPage />
                   </RoleRoute>
                 }
               />
@@ -198,10 +190,7 @@ export function App() {
                 path="/departments"
                 element={
                   <RoleRoute allowedRoles={['ADMIN']}>
-                    <PlaceholderPage
-                      title="Departments"
-                      description="Academic and administrative department directory."
-                    />
+                    <DepartmentsPage />
                   </RoleRoute>
                 }
               />
@@ -209,10 +198,7 @@ export function App() {
                 path="/categories"
                 element={
                   <RoleRoute allowedRoles={['ADMIN']}>
-                    <PlaceholderPage
-                      title="Categories"
-                      description="Item category taxonomy management."
-                    />
+                    <CategoriesPage />
                   </RoleRoute>
                 }
               />
@@ -233,10 +219,7 @@ export function App() {
                 path="/notifications"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'HOD', 'REQUESTER', 'PROCUREMENT_OFFICER', 'STORE_MANAGER', 'SUPPLIER']}>
-                    <PlaceholderPage
-                      title="Notifications"
-                      description="In-app alerts and notifications."
-                    />
+                    <NotificationsPage />
                   </RoleRoute>
                 }
               />

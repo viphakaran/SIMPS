@@ -53,7 +53,7 @@ test('2. Admin login, logout and login again', async ({ page }) => {
   await expect(page.locator('text=System Admin').first()).toBeVisible();
 
   // Admin Logout
-  await page.click('header .dropdown button');
+  await page.click('#user-menu-btn');
   await page.click('text=Logout');
   await expect(page).toHaveURL(/.*login/);
 
@@ -66,7 +66,7 @@ test('2. Admin login, logout and login again', async ({ page }) => {
   await expect(page.locator('text=System Admin').first()).toBeVisible();
 
   // Clean up logout
-  await page.click('header .dropdown button');
+  await page.click('#user-menu-btn');
   await page.click('text=Logout');
   await expect(page).toHaveURL(/.*login/);
 });
@@ -100,7 +100,7 @@ test('4. Role-filtered navigation for at least two different roles', async ({ pa
   await expect(sidebar.locator('text=Inventory')).toBeVisible();
 
   // Logout Admin
-  await page.click('header .dropdown button');
+  await page.click('#user-menu-btn');
   await page.click('text=Logout');
   await expect(page).toHaveURL(/.*login/);
 
@@ -118,7 +118,7 @@ test('4. Role-filtered navigation for at least two different roles', async ({ pa
   await expect(sidebar.locator('text=Categories')).toHaveCount(0);
 
   // Logout Store Manager
-  await page.click('header .dropdown button');
+  await page.click('#user-menu-btn');
   await page.click('text=Logout');
   await expect(page).toHaveURL(/.*login/);
 });

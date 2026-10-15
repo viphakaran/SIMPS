@@ -4,6 +4,7 @@ import {
   ConflictError,
   NotFoundError
 } from '../utils/errors.js';
+import { parsePagination, formatPaginated } from '../utils/pagination.js';
 import { NotificationService } from './notificationService.js';
 
 export function deriveItemStatus(stockQty, minLevel) {
@@ -116,7 +117,7 @@ export class StockService {
   }
 
   static async listMovements(queryParams = {}) {
-    const { page, pageSize, limit, offset, search } = queryParams;
+    const { page, pageSize, limit, offset, search } = parsePagination(queryParams);
     const { itemId, type, departmentId, fromDate, toDate } = queryParams;
 
     const conditions = [];
@@ -202,11 +203,6 @@ export class StockService {
       createdAt: m.created_at
     }));
 
-    return {
-      data,
-      page,
-      pageSize,
-      total: Number(total)
-    };
+    return formatPaginated(data, total, page, pageSize);
   }
 }
