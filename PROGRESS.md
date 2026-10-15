@@ -186,9 +186,17 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 10: Tests, Docs & Hardening
-- **Status:** not started
-- **Branch:** feat/10-tests-docs-hardening
-- **Merge Commit:** -
+- **Status:** done
+- **Branch:** feat/10-final
+- **Merge Commit:** ac90a80
 - **Acceptance Checks:**
+  - Coverage review on `server/src/services`: PASS — Statements 81.44%, Functions 95.37%, Lines 81.22% across all 11 services (auth, category, department, item, notification, order, report, request, stock, supplier, user). All 8 Jest suites pass (82/82 tests passing).
+  - Security penetration tests (`server/tests/security.test.js`): PASS — All 6 attack scenarios validated: SQL injection parameters sanitized, pagination query params validated with Zod, JWT signature/algorithm 'none' tampering rejected, cross-supplier PO access forbidden/404, cross-dept request approval blocked, registration mass-assignment prevented, brute force rate limiter blocks excess attempts with 429.
+  - Dependency Audit (`npm audit`): PASS — 40 transitive dev/unused feature advisories documented in `docs/TEST-REPORT.md`; no breaking upgrades forced.
+  - GitHub Actions CI workflow (`.github/workflows/ci.yml`): PASS — Configured with Node 20, MySQL 8.0 service container, npm ci, lint, test, and client build.
+  - Documentation: PASS — Root `README.md` complete with architecture, ER diagram, procurement sequence, prerequisites, setup under 15 mins, scripts, and env tables; created `docs/ARCHITECTURE.md` (layers, locking, flow, notifications) and `docs/USER-GUIDE.md` (role-by-role workflows).
+  - Test Report (`docs/TEST-REPORT.md`): PASS — Real automated test outcomes and security review matrix documented.
+  - Clean Walkthrough: PASS — Migrations, demo:load, demo:status, demo:clear executed cleanly on clean database.
+  - Full Lint & Client Build: PASS — `npm run lint` 0 errors, `npm run build -w client` built in 13.91s.
 - **Deviations:** None
 - **Open Issues:** None
