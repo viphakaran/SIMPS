@@ -8,6 +8,7 @@
     "demo:status": "node status.js"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.6.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "mysql2": "^3.12.0"
