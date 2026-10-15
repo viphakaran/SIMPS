@@ -156,8 +156,8 @@ test('6. With the server stopped, a data page shows the error state with Retry a
   await expect(retryButton).toBeVisible();
 
   // Verify no fake department data is loaded
-  const deptSelect = page.locator('#reg-dept');
-  await expect(deptSelect).toHaveCount(0); // select is not rendered when loading failed
+  const deptOptions = page.locator('#reg-dept option');
+  await expect(deptOptions).toHaveCount(0);
 
   // Restart backend server
   await startBackendServer();

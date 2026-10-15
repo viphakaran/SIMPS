@@ -102,22 +102,30 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Deviations:** None
 - **Open Issues:** None
 
-### Phase 06: Client Foundation
+### Phase 06: Client Foundation & E2E Acceptance
 - **Status:** done
-- **Branch:** feat/06-client-foundation
-- **Merge Commit:** 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab
-- **Acceptance Checks:**
-  - Stack and Tokens: PASS — React Router 6, Bootstrap 5, bootstrap-icons, `@fontsource/inter`, axios, Recharts configured; `client/src/styles/theme.css` overrides Bootstrap tokens matching `docs/UI.md`.
-  - API Client: PASS — Axios instance configured with bearer token injection from sessionStorage, 401 clearing and redirect to `/login`, and standard error normalization.
-  - AuthContext: PASS — Persistent session restoration via `GET /api/auth/me`, login, logout, registration, and change-password workflows.
-  - App Shell & Navigation: PASS — Fixed 240px sidebar on desktop, offcanvas navigation on mobile (<992px); role-scoped navigation filtering; notification bell showing live unread count; user dropdown with change password modal; demo data warning banner driven by `GET /api/meta`.
-  - Route Guards & Error Pages: PASS — `ProtectedRoute` and `RoleRoute` protecting authenticated paths and role scopes; dedicated `/403` Forbidden and `/404` Not Found error pages.
-  - Shared Components: PASS — All components from `docs/UI.md` implemented: DataTable (server pagination, search, sorting), StatusBadge (color mapping), PageHeader, Card, StatCard, Modal, ConfirmDialog, ConfirmReason, Toast/ToastProvider, FormField, EmptyState, LoadingState, ErrorState, Timeline.
-  - Auth Pages: PASS — `LoginPage` with pending account detection and inline error display; `RegisterPage` with dynamic department loading (`/api/departments/public`) and post-submission pending approval confirmation state.
+- **Branch:** feat/06-client-foundation & feat/06b-e2e-acceptance
+- **Merge Commit:** 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab (feat/06-client-foundation)
+- **Code Checks:**
   - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
+  - `npm test`: PASS — 66/66 integration tests passed across all 6 test suites (`auth.test.js`, `health.test.js`, `inventory.test.js`, `masters.test.js`, `procurement.test.js`, `reports.test.js`).
   - `npm run build -w client`: PASS — Vite production bundle generated cleanly with 0 errors.
-  - `npm test`: PASS — All 66 server test suites passing.
-- **Deviations:** None
+- **Browser Acceptance Checks (`npm run test:e2e`):**
+  - Command: `npx playwright test` via `npm run test:e2e` (running against isolated database `smartinv_e2e`, test server port 5001, test client port 5174).
+  - Check 1 (Registration pending): PASS — Registration submits with college domain, creates pending requester, displays "Registration Submitted - Pending Approval" screen with no automatic login.
+  - Check 2 (Admin login/logout/login): PASS — Logs in as System Admin, confirms redirect to dashboard and user display, logs out cleanly via header dropdown, and successfully logs in again.
+  - Check 3 (Invalid credentials): PASS — Submitting incorrect password displays inline error alert ("Invalid email or password") with no crash.
+  - Check 4 (Role-filtered navigation): PASS — ADMIN sidebar displays Users, Departments, Categories, Inventory; STORE_MANAGER sees Inventory and Reorder Suggestions while admin master links (Users, Departments, Categories) are hidden.
+  - Check 5 (Forbidden route /403): PASS — Authenticated STORE_MANAGER directly navigating to `/users` is blocked and redirected to `/403` with "403 — Access Denied" card.
+  - Check 6 (Server offline / Retry / No fake data): PASS — With backend server stopped on port 5001, navigating to `/register` renders the standard `ErrorState` component with Retry button and 0 fake department options; restarting server and clicking Retry successfully loads active departments without page reload.
+  - Overall Suite: PASS (6/6 tests passing in 32.5s).
+- **Resume after interruption:**
+  - Resumed on branch `feat/06b-e2e-acceptance` following host restart.
+  - Verified Docker container `simps-mysql` healthy on port 3306.
+  - Terminated orphaned dev processes on ports 5000/5173 to ensure ports remain free.
+  - Hardened `.gitignore` to prevent leakage of `.env.e2e`, `test-results/`, and temporary build artifacts.
+  - Completed and executed all 6 Playwright browser acceptance checks against isolated `smartinv_e2e`.
+- **Deviations:** Introduced `@playwright/test` dev dependency with dedicated `smartinv_e2e` database and ports 5001/5174 to satisfy browser acceptance requirements without touching development data (documented in `docs/CHANGES.md`).
 - **Open Issues:** None
 
 ### Phase 07: Client Masters & Inventory

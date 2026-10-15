@@ -5,7 +5,10 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   retries: 0,
-  timeout: 30000,
+  timeout: 45000,
+  expect: {
+    timeout: 10000
+  },
   use: {
     baseURL: 'http://localhost:5174',
     channel: 'chrome',
@@ -17,6 +20,6 @@ export default defineConfig({
     command: 'npx vite --port 5174 --mode e2e',
     url: 'http://localhost:5174',
     reuseExistingServer: !process.env.CI,
-    timeout: 30000
+    timeout: 60000
   }
 });

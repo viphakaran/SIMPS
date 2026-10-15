@@ -81,60 +81,48 @@ export async function setupE2eDatabase() {
   await conn.end();
 }
 
-export function startBackendServer() {
-  return new Promise((resolve, reject) => {
-    if (serverProcess) {
-      return resolve();
-    }
-    serverProcess = spawn('node', ['server/src/server.js'], {
-      cwd: rootDir,
-      env: {
-        ...process.env,
-        PORT: '5001',
-        DB_NAME: 'smartinv_e2e',
-        DB_NAME_TEST: 'smartinv_e2e',
-        CORS_ORIGIN: 'http://localhost:5174',
-        NODE_ENV: 'test'
-      },
-      stdio: ['ignore', 'pipe', 'pipe']
-    });
-
-    let resolved = false;
-
-    serverProcess.stdout.on('data', (data) => {
-      const msg = data.toString();
-      if (msg.includes('5001') && !resolved) {
-        resolved = true;
-        resolve();
-      }
-    });
-
-    serverProcess.stderr.on('data', (data) => {
-      const errText = data.toString();
-      if (!errText.includes('ExperimentalWarning')) {
-        console.error('[E2E Server Stderr]', errText);
-      }
-    });
-
-    serverProcess.on('error', (err) => {
-      if (!resolved) {
-        resolved = true;
-        reject(err);
-      }
-    });
-
-    serverProcess.on('exit', () => {
-      serverProcess = null;
-    });
-
-    // Fallback if stdout regex misses
-    setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        resolve();
-      }
-    }, 2500);
+export async function startBackendServer() {
+  if (serverProcess) {
+    return;
+  }
+  serverProcess = spawn('node', ['server/src/server.js'], {
+    cwd: rootDir,
+    env: {
+      ...process.env,
+      PORT: '5001',
+      DB_NAME: 'smartinv_e2e',
+      DB_NAME_TEST: 'smartinv_e2e',
+      CORS_ORIGIN: 'http://localhost:5174',
+      NODE_ENV: 'test'
+    },
+    stdio: ['ignore', 'pipe', 'pipe']
   });
+
+  serverProcess.stderr.on('data', (data) => {
+    const errText = data.toString();
+    if (!errText.includes('ExperimentalWarning')) {
+      console.error('[E2E Server Stderr]', errText);
+    }
+  });
+
+  serverProcess.on('exit', () => {
+    serverProcess = null;
+  });
+
+  // Poll /api/health until server is responsive
+  const startTime = Date.now();
+  while (Date.now() - startTime < 10000) {
+    try {
+      const res = await fetch('http://localhost:5001/api/health');
+      if (res.ok) {
+        return;
+      }
+    } catch {
+      // Waiting for server to listen
+    }
+    await new Promise((r) => setTimeout(r, 200));
+  }
+  throw new Error('Timed out waiting for E2E backend server to start on port 5001');
 }
 
 export function stopBackendServer() {
