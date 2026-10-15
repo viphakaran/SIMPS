@@ -26,7 +26,18 @@ export function ToastProvider({ children }) {
   const info = useCallback((msg, duration) => addToast(msg, 'info', duration), [addToast]);
 
   return (
-    <ToastContext.Provider value={{ addToast, removeToast, success, error, warning, info }}>
+    <ToastContext.Provider
+      value={{
+        addToast,
+        removeToast,
+        success,
+        error,
+        warning,
+        info,
+        showSuccess: success,
+        showError: error
+      }}
+    >
       {children}
       <div
         className="toast-container position-fixed bottom-0 end-0 p-3"
