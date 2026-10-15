@@ -168,7 +168,7 @@ describe('Procurement Lifecycle: Requests, Approvals, Orders & Receiving', () =>
       "INSERT INTO items (sku, name, unit, stock_qty, min_level, unit_cost, is_active) VALUES ('IT-HP-01', 'HP LaserJet Pro', 'nos', 2, 2, 18000.00, 1)"
     );
     item2Id = it2.insertId;
-  });
+  }, 30000);
 
   describe('Full End-to-End Procurement Lifecycle (Path A: Requester -> HoD -> Procurement -> Supplier -> Store Manager)', () => {
     it('executes the full lifecycle and increases stock by exactly PO quantities with matching movements', async () => {

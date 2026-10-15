@@ -541,7 +541,7 @@ export class RequestService {
       );
     }
 
-    const [updateResult] = await query(
+    const updateResult = await query(
       "UPDATE purchase_requests SET status = 'CANCELLED' WHERE id = ? AND status IN ('PENDING_HOD', 'PENDING_PRINCIPAL')",
       [id]
     );

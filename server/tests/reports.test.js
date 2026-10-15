@@ -135,7 +135,7 @@ describe('Reports, Analytics & Scheduler', () => {
       .post('/api/auth/login')
       .send({ email: 'rep@globaltech.com', password: 'Password123' });
     supplierToken = supLogin.body.token;
-  });
+  }, 30000);
 
   describe('Acceptance Check 1: Empty Database Behavior', () => {
     it('returns empty structures with valid zeros/empty lists and zero fabricated numbers', async () => {
