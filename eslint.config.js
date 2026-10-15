@@ -38,6 +38,20 @@ export default [
     }
   },
   {
+    files: ['client/e2e/**/*.js', 'client/playwright.config.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+        ...globals.es2021
+      }
+    },
+    rules: {
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }]
+    }
+  },
+  {
     files: ['client/**/*.{js,jsx}'],
     plugins: {
       react: reactPlugin
