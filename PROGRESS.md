@@ -14,7 +14,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 06 | 06-client-foundation.md | feat/06-client-foundation | done | 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab |
 | 07 | 07-client-masters-inventory.md | feat/07-client-inventory | done | 1e0f6deaa912c13149a0f70b6b1c7f346590d89f |
 | 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement | done | e9a701cb2fc1abc0447df2d10458373f25eee180 |
-| 09 | 09-demo-data.md | feat/09-demo-data | not started | - |
+| 09 | 09-demo-data.md | feat/09-demo | done | bcdc488d20a8a8a1744868019b45f3bdaf22687c |
 | 10 | 10-tests-docs-hardening.md | feat/10-tests-docs-hardening | not started | - |
 
 ---
@@ -171,10 +171,17 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 09: Demo Data
-- **Status:** not started
-- **Branch:** feat/09-demo-data
-- **Merge Commit:** -
+- **Status:** done
+- **Branch:** feat/09-demo
+- **Merge Commit:** bcdc488d20a8a8a1744868019b45f3bdaf22687c
 - **Acceptance Checks:**
+  - `npm run demo:load`: PASS — Deterministically seeds 5 categories, 4 departments, 6 suppliers, 21 users across all roles, 30 items with realistic units/costs/min levels, 60-day movement ledger with strictly non-negative balances and sum invariant, purchase requests across all statuses, purchase orders (on-time and late deliveries for supplier metrics), and in-app notifications. Prints formatted credentials table.
+  - `npm run demo:status`: PASS — Correctly tabulates demo vs real counts per table.
+  - `npm run demo:clear`: PASS — Deletes every row with `is_demo = 1` in foreign-key-safe order without leaving orphans, reports per-table counts, never touches real rows (`is_demo = 0`), and enforces production safeguard (`--force`).
+  - Idempotency & Safe Refusal: PASS — Running `demo:load` twice without `--reset` safely refuses with descriptive error.
+  - Inheritance: PASS — Performing action as real admin on demo item inherits `is_demo = 1` into newly generated stock movements, so `demo:clear` cleanly removes them without touching real records.
+  - `client/e2e/phase09.spec.js`: PASS — All 2 E2E lifecycle tests pass, verifying UI banner appearance, dashboard population, admin action, clear, and FK integrity.
+  - Combined Playwright Suite (`npm run test:e2e`): PASS — All 14/14 tests pass across Phase 06, 07, 08, 09 in 3.7m.
 - **Deviations:** None
 - **Open Issues:** None
 
