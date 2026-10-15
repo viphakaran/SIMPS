@@ -111,7 +111,7 @@ export async function startBackendServer() {
 
   // Poll /api/health until server is responsive
   const startTime = Date.now();
-  while (Date.now() - startTime < 10000) {
+  while (Date.now() - startTime < 45000) {
     try {
       const res = await fetch('http://localhost:5001/api/health');
       if (res.ok) {
@@ -130,6 +130,8 @@ export function stopBackendServer() {
     try {
       if (process.platform === 'win32') {
         execSync(`taskkill /pid ${serverProcess.pid} /T /F`, { stdio: 'ignore' });
+        // Synchronous sleep on Windows to allow OS to release socket binding
+        execSync('powershell -Command "Start-Sleep -Milliseconds 500"');
       } else {
         serverProcess.kill('SIGTERM');
       }
