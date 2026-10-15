@@ -11,8 +11,8 @@ import { LoginPage } from './pages/auth/LoginPage.jsx';
 import { RegisterPage } from './pages/auth/RegisterPage.jsx';
 import { ForbiddenPage } from './pages/errors/ForbiddenPage.jsx';
 import { NotFoundPage } from './pages/errors/NotFoundPage.jsx';
-import { PlaceholderPage } from './pages/PlaceholderPage.jsx';
 
+import { DashboardPage } from './pages/dashboard/DashboardPage.jsx';
 import { UsersPage } from './pages/users/UsersPage.jsx';
 import { DepartmentsPage } from './pages/masters/DepartmentsPage.jsx';
 import { CategoriesPage } from './pages/masters/CategoriesPage.jsx';
@@ -21,6 +21,14 @@ import { SupplierDetailPage } from './pages/suppliers/SupplierDetailPage.jsx';
 import { ItemsPage } from './pages/inventory/ItemsPage.jsx';
 import { ItemDetailPage } from './pages/inventory/ItemDetailPage.jsx';
 import { ReorderPage } from './pages/inventory/ReorderPage.jsx';
+import { RequestsPage } from './pages/requests/RequestsPage.jsx';
+import { NewRequestPage } from './pages/requests/NewRequestPage.jsx';
+import { RequestDetailPage } from './pages/requests/RequestDetailPage.jsx';
+import { ApprovalsPage } from './pages/approvals/ApprovalsPage.jsx';
+import { ProcurementPage } from './pages/procurement/ProcurementPage.jsx';
+import { OrdersPage } from './pages/orders/OrdersPage.jsx';
+import { OrderDetailPage } from './pages/orders/OrderDetailPage.jsx';
+import { ReportsPage } from './pages/reports/ReportsPage.jsx';
 import { NotificationsPage } from './pages/notifications/NotificationsPage.jsx';
 
 export function App() {
@@ -44,15 +52,7 @@ export function App() {
               }
             >
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <PlaceholderPage
-                    title="Dashboard"
-                    description="Role-specific KPIs, stock alerts, and summary metrics."
-                  />
-                }
-              />
+              <Route path="/dashboard" element={<DashboardPage />} />
 
               {/* Inventory */}
               <Route
@@ -85,10 +85,7 @@ export function App() {
                 path="/requests"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'HOD', 'REQUESTER', 'PROCUREMENT_OFFICER', 'STORE_MANAGER']}>
-                    <PlaceholderPage
-                      title="Purchase Requests"
-                      description="Requisitions list, line items, and approval states."
-                    />
+                    <RequestsPage />
                   </RoleRoute>
                 }
               />
@@ -96,10 +93,7 @@ export function App() {
                 path="/requests/new"
                 element={
                   <RoleRoute allowedRoles={['HOD', 'REQUESTER']}>
-                    <PlaceholderPage
-                      title="New Purchase Request"
-                      description="Create and submit a multi-line requisition."
-                    />
+                    <NewRequestPage />
                   </RoleRoute>
                 }
               />
@@ -107,10 +101,7 @@ export function App() {
                 path="/requests/:id"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'HOD', 'REQUESTER', 'PROCUREMENT_OFFICER', 'STORE_MANAGER']}>
-                    <PlaceholderPage
-                      title="Purchase Request Detail"
-                      description="Requisition details, approval audit log, and PO links."
-                    />
+                    <RequestDetailPage />
                   </RoleRoute>
                 }
               />
@@ -118,10 +109,7 @@ export function App() {
                 path="/approvals"
                 element={
                   <RoleRoute allowedRoles={['HOD', 'PRINCIPAL']}>
-                    <PlaceholderPage
-                      title="Approvals Queue"
-                      description="Review, approve, or reject pending requisitions."
-                    />
+                    <ApprovalsPage />
                   </RoleRoute>
                 }
               />
@@ -131,10 +119,7 @@ export function App() {
                 path="/procurement"
                 element={
                   <RoleRoute allowedRoles={['PROCUREMENT_OFFICER']}>
-                    <PlaceholderPage
-                      title="Procurement Processing"
-                      description="Assign suppliers, unit prices, and generate purchase orders."
-                    />
+                    <ProcurementPage />
                   </RoleRoute>
                 }
               />
@@ -142,10 +127,7 @@ export function App() {
                 path="/orders"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'PROCUREMENT_OFFICER', 'STORE_MANAGER', 'SUPPLIER']}>
-                    <PlaceholderPage
-                      title="Purchase Orders"
-                      description="Supplier PO tracking, delivery pipelines, and goods receipt."
-                    />
+                    <OrdersPage />
                   </RoleRoute>
                 }
               />
@@ -153,10 +135,7 @@ export function App() {
                 path="/orders/:id"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'PROCUREMENT_OFFICER', 'STORE_MANAGER', 'SUPPLIER']}>
-                    <PlaceholderPage
-                      title="Purchase Order Detail"
-                      description="PO lines, supplier fulfillment actions, and receipt processing."
-                    />
+                    <OrderDetailPage />
                   </RoleRoute>
                 }
               />
@@ -208,10 +187,7 @@ export function App() {
                 path="/reports"
                 element={
                   <RoleRoute allowedRoles={['ADMIN', 'PRINCIPAL', 'PROCUREMENT_OFFICER', 'STORE_MANAGER', 'HOD']}>
-                    <PlaceholderPage
-                      title="Reports & Analytics"
-                      description="Inventory valuation, procurement turnaround, and export tools."
-                    />
+                    <ReportsPage />
                   </RoleRoute>
                 }
               />

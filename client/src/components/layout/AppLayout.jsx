@@ -385,6 +385,7 @@ export function AppLayout() {
                 </li>
                 <li>
                   <button
+                    id="logout-btn"
                     type="button"
                     className="dropdown-item text-danger py-2 d-flex align-items-center gap-2"
                     onClick={() => {
