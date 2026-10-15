@@ -13,7 +13,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 05 | 05-server-reports.md | feat/05-reports | done | f47fa087c58bf8347a5cb026e47d5d6e61875e1a |
 | 06 | 06-client-foundation.md | feat/06-client-foundation | done | 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab |
 | 07 | 07-client-masters-inventory.md | feat/07-client-inventory | done | 1e0f6deaa912c13149a0f70b6b1c7f346590d89f |
-| 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement | in progress (e2e passed) | - |
+| 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement | done | e9a701cb2fc1abc0447df2d10458373f25eee180 |
 | 09 | 09-demo-data.md | feat/09-demo-data | not started | - |
 | 10 | 10-tests-docs-hardening.md | feat/10-tests-docs-hardening | not started | - |
 
@@ -146,19 +146,29 @@ Tracking build progress across all phases (prompts 00 through 10).
 - **Open Issues:** None
 
 ### Phase 08: Client Procurement & Dashboards
-- **Status:** in progress (implementation complete, committed in `0b8654e`; Playwright E2E passed; lint passed; unit tests pending final run before merge)
+- **Status:** done
 - **Branch:** feat/08-client-procurement
-- **Merge Commit:** pending merge into main
+- **Merge Commit:** e9a701cb2fc1abc0447df2d10458373f25eee180
 - **Acceptance Checks:**
   - `npm run lint`: PASS — Flat ESLint passed with 0 errors and 0 warnings.
-  - `npm run build -w client`: PASS — Vite client production bundle built cleanly in 20.09s.
-  - `npx playwright test client/e2e/phase08.spec.js --config client/playwright.config.js`: PASS — All 3 tests passed in 48.0s:
-    1. Full procurement cycle: Requester -> HoD -> Officer -> Supplier -> Store Manager receipt -> stock increases (17.4s).
-    2. HoD-raised request approved by Principal (5.9s).
-    3. Role navigation scoping, reports tabs & CSV exports, and 403 access control (5.3s).
-  - Combined Playwright Suite (`npx playwright test --config client/playwright.config.js`): PASS — All 12 tests across Phase 06, Phase 07, and Phase 08 passed in 1.7m.
+  - `npm test`: PASS — 66/66 integration tests passed across all 6 test suites (`procurement.test.js`, `reports.test.js`, `masters.test.js`, `inventory.test.js`, `auth.test.js`, `health.test.js`).
+  - `npm run build -w client`: PASS — Vite client production bundle built cleanly in 14.13s.
+  - `npm run test:e2e` (Playwright E2E suite against `smartinv_e2e`, ports 5001 & 5174): PASS — All 12/12 tests passing in 2.9m:
+    - `e2e/phase08.spec.js`:
+      1. Full procurement cycle: Requester -> HoD -> Officer -> Supplier -> Store Manager receipt -> stock increases, request RECEIVED, step-level notifications for all parties (36.5s).
+      2. HoD-raised request approved by Principal (10.6s).
+      3. Role navigation scoping, reports tabs & CSV exports, and 403 access control (8.7s).
+- **Acceptance Verification Matrix:**
+  | Requirement | Test File | Test Name | Result |
+  |---|---|---|---|
+  | Admin: create department, HoD, assign HoD, approve self-registered requester | `client/e2e/phase07.spec.js` | 1. Admin creates department, HoD user, assigns HoD, and approves a self-registered requester | PASS |
+  | Store manager: create category & item with opening stock, issue stock below minimum, see exactly 1 low-stock notification, movement history shows opening, issue, balance | `client/e2e/phase07.spec.js` | 2. Store Manager creates item with opening stock, issues stock below minimum, checks notification and ledger | PASS |
+  | Empty database screens show helpful empty states with actions | `client/e2e/phase07.spec.js` | 3. Empty database screens show helpful empty states with actions | PASS |
+  | Full procurement cycle: requester raises -> HoD approves -> officer creates PO -> supplier moves to DELIVERED -> store manager receives -> stock increases, request RECEIVED, notifications at each step | `client/e2e/phase08.spec.js` | 1. Full procurement cycle: Requester -> HoD -> Officer -> Supplier -> Store Manager receipt -> stock increases | PASS |
+  | HoD-raised request approved by Principal | `client/e2e/phase08.spec.js` | 2. HoD-raised request approved by Principal | PASS |
+  | Role-scoped navigation and data visibility | `client/e2e/phase08.spec.js` & `client/e2e/phase06.spec.js` | 3. Role navigation scoping, reports, and empty state check | PASS |
 - **Deviations:** None
-- **Open Issues:** Run `npm test` across all server suites, merge `feat/08-client-procurement` into `main` with `--no-ff`, and proceed to Phase 09.
+- **Open Issues:** None
 
 ### Phase 09: Demo Data
 - **Status:** not started
