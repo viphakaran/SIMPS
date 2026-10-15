@@ -143,6 +143,10 @@ test.describe('Phase 08 — Client Procurement, Approvals, Orders, Dashboards & 
     // Check dashboard reflects 1 pending approval
     await expect(page.locator('.card:has-text("Pending Department Approvals")')).toContainText('1');
 
+    // Step-level Notification: HoD sees new request notification
+    await page.goto('http://localhost:5174/notifications');
+    await expect(page.locator('.list-group-item:has-text("New purchase request")')).toBeVisible();
+
     // Navigate to Approvals
     await page.click('nav a:has-text("Approvals")');
     await expect(page).toHaveURL('http://localhost:5174/approvals');
@@ -158,6 +162,11 @@ test.describe('Phase 08 — Client Procurement, Approvals, Orders, Dashboards & 
 
     // C. Procurement Officer creates PO
     await loginAs(page, 'officer@ritrjpm.ac.in');
+
+    // Step-level Notification: Officer sees request approved notification
+    await page.goto('http://localhost:5174/notifications');
+    await expect(page.locator('.list-group-item:has-text("approved")')).toBeVisible();
+
     await page.goto('http://localhost:5174/procurement');
     await expect(page.locator('table').locator('text=Prof Ramesh')).toBeVisible();
 
@@ -175,6 +184,11 @@ test.describe('Phase 08 — Client Procurement, Approvals, Orders, Dashboards & 
 
     // D. Supplier fulfills order: PLACED -> CONFIRMED -> SHIPPED -> DELIVERED
     await loginAs(page, 'apex.rep@demo.invalid');
+
+    // Step-level Notification: Supplier sees new purchase order notification
+    await page.goto('http://localhost:5174/notifications');
+    await expect(page.locator('.list-group-item:has-text("New purchase order")')).toBeVisible();
+
     await page.goto('http://localhost:5174/orders');
     await page.locator('table button:has-text("View")').first().click();
     await expect(page).toHaveURL(/.*\/orders\/\d+/);
@@ -201,6 +215,11 @@ test.describe('Phase 08 — Client Procurement, Approvals, Orders, Dashboards & 
 
     // E. Store Manager receives goods
     await loginAs(page, 'store@ritrjpm.ac.in', 'Store123!');
+
+    // Step-level Notification: Store Manager sees delivered order ready for receipt
+    await page.goto('http://localhost:5174/notifications');
+    await expect(page.locator('.list-group-item:has-text("DELIVERED")')).toBeVisible();
+
     await page.goto('http://localhost:5174/orders');
     await page.locator('table button:has-text("Receive")').first().click();
     await expect(page).toHaveURL(/.*\/orders\/\d+/);
@@ -226,10 +245,9 @@ test.describe('Phase 08 — Client Procurement, Approvals, Orders, Dashboards & 
     await page.goto('http://localhost:5174/requests');
     await expect(page.locator('table').locator('text=Received')).toBeVisible();
 
-    // Check notifications
-    await page.click('#notif-menu-btn');
-    await page.click('button:has-text("View all notifications")');
-    await expect(page.locator('body')).toContainText('received');
+    // Step-level Notification: Requester sees received notification
+    await page.goto('http://localhost:5174/notifications');
+    await expect(page.locator('.list-group-item:has-text("received")')).toBeVisible();
 
     await logout(page);
   });
