@@ -13,6 +13,7 @@ export function AppLayout() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [offcanvasOpen, setOffcanvasOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   // Fetch demo data flag and notification unread count
   useEffect(() => {
@@ -228,12 +229,12 @@ export function AppLayout() {
 
           {/* User Menu */}
           {user && (
-            <div className="dropdown">
+            <div className={`dropdown ${userMenuOpen ? 'show' : ''}`}>
               <button
                 className="btn btn-light d-flex align-items-center gap-2 border py-1 px-2 rounded"
                 type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+                onClick={() => setUserMenuOpen((prev) => !prev)}
+                aria-expanded={userMenuOpen}
               >
                 <div
                   className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
@@ -249,7 +250,10 @@ export function AppLayout() {
                 </div>
                 <i className="bi bi-chevron-down text-muted small ms-1"></i>
               </button>
-              <ul className="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+              <ul
+                className={`dropdown-menu dropdown-menu-end shadow border-0 mt-2 ${userMenuOpen ? 'show' : ''}`}
+                style={{ position: 'absolute', right: 0, left: 'auto' }}
+              >
                 <li className="px-3 py-2 border-bottom">
                   <div className="fw-semibold text-dark small">{user.name}</div>
                   <div className="text-muted small">{user.email}</div>
@@ -263,7 +267,10 @@ export function AppLayout() {
                   <button
                     type="button"
                     className="dropdown-item py-2 d-flex align-items-center gap-2"
-                    onClick={() => setShowChangePassword(true)}
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      setShowChangePassword(true);
+                    }}
                   >
                     <i className="bi bi-key text-muted"></i>
                     <span>Change Password</span>
@@ -276,7 +283,10 @@ export function AppLayout() {
                   <button
                     type="button"
                     className="dropdown-item text-danger py-2 d-flex align-items-center gap-2"
-                    onClick={logout}
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      logout();
+                    }}
                   >
                     <i className="bi bi-box-arrow-right"></i>
                     <span>Logout</span>

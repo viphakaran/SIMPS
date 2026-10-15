@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '../../api/client.js';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { ErrorState } from '../../components/common/LoadingState.jsx';
 
 export function RegisterPage() {
   const { register } = useAuth();
@@ -125,12 +126,11 @@ export function RegisterPage() {
           )}
 
           {deptError && (
-            <div className="alert alert-warning d-flex align-items-center justify-content-between py-2 px-3 mb-3 small">
-              <span>{deptError}</span>
-              <button type="button" className="btn btn-sm btn-outline-dark" onClick={fetchDepartments}>
-                Retry
-              </button>
-            </div>
+            <ErrorState
+              title="Unable to load departments"
+              message={deptError}
+              onRetry={fetchDepartments}
+            />
           )}
 
           <form onSubmit={handleSubmit}>
