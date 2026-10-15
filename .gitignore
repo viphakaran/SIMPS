@@ -5,3 +5,8 @@ node_modules/
 dist/
 coverage/
 .DS_Store
+.env.e2e
+client/.env.e2e
+client/test-results/
+client/playwright-report/
+*.timestamp-*.mjs
