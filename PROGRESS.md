@@ -12,7 +12,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 04 | 04-server-procurement.md | feat/04-procurement | done | 3b85f66015cd1429477919e047dbaf619957ffe7 |
 | 05 | 05-server-reports.md | feat/05-reports | done | f47fa087c58bf8347a5cb026e47d5d6e61875e1a |
 | 06 | 06-client-foundation.md | feat/06-client-foundation | done | 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab |
-| 07 | 07-client-masters-inventory.md | feat/07-client-inventory | done | pending-merge |
+| 07 | 07-client-masters-inventory.md | feat/07-client-inventory | done | 1e0f6deaa912c13149a0f70b6b1c7f346590d89f |
 | 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement-dashboards | not started | - |
 | 09 | 09-demo-data.md | feat/09-demo-data | not started | - |
 | 10 | 10-tests-docs-hardening.md | feat/10-tests-docs-hardening | not started | - |
@@ -131,7 +131,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 ### Phase 07: Client Masters, Inventory & Notifications
 - **Status:** done
 - **Branch:** feat/07-client-inventory
-- **Merge Commit:** pending-merge
+- **Merge Commit:** 1e0f6deaa912c13149a0f70b6b1c7f346590d89f
 - **Code Checks:**
   - `npm run lint`: PASS — ESLint passed with 0 errors and 0 warnings.
   - `npm test`: PASS — 66/66 integration tests passed across all 6 test suites.
