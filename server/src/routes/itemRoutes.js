@@ -7,7 +7,8 @@ import {
   createItemSchema,
   updateItemSchema,
   issueStockSchema,
-  adjustStockSchema
+  adjustStockSchema,
+  listItemQuerySchema
 } from '../schemas/itemSchemas.js';
 
 const router = Router();
@@ -25,7 +26,7 @@ const nonSupplierRoles = [
 ];
 
 router.get('/reorder-suggestions', authorize('STORE_MANAGER', 'PROCUREMENT_OFFICER'), ReportController.getReorderSuggestions);
-router.get('/', authorize(...nonSupplierRoles), ItemController.list);
+router.get('/', authorize(...nonSupplierRoles), validate({ query: listItemQuerySchema }), ItemController.list);
 router.get('/:id', authorize(...nonSupplierRoles), ItemController.getById);
 router.get('/:id/movements', authorize(...nonSupplierRoles), ItemController.getItemMovements);
 

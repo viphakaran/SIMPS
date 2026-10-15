@@ -32,3 +32,13 @@ export const adjustStockSchema = z.object({
     .refine((v) => v !== 0, 'Delta cannot be zero'),
   reason: z.string().trim().min(2, 'Reason is required for adjustment')
 });
+
+export const listItemQuerySchema = z.object({
+  page: z.coerce.number().int().positive().optional(),
+  pageSize: z.coerce.number().int().positive().max(100).optional(),
+  search: z.string().optional(),
+  categoryId: z.coerce.number().int().positive().optional(),
+  status: z.enum(['OUT', 'LOW', 'IN_STOCK']).optional(),
+  active: z.string().optional()
+});
+
