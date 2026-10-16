@@ -15,7 +15,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 07 | 07-client-masters-inventory.md | feat/07-client-inventory | done | 1e0f6deaa912c13149a0f70b6b1c7f346590d89f |
 | 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement | done | e9a701cb2fc1abc0447df2d10458373f25eee180 |
 | 10 | 10-tests-docs-hardening.md | feat/10-final | done | 17ad56885df46960cf16e00aa35f8d0a3d463870 |
-| 11 | Institutional Branding & Real Master Data | feat/11-branding | done | [pending merge] |
+| 11 | Institutional Branding & Real Master Data | feat/11-branding | done | a338933 |
 
 ---
 
@@ -204,7 +204,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 ### Phase 11: Institutional Branding & Real Master Data
 - **Status:** done
 - **Branch:** feat/11-branding
-- **Merge Commit:** [pending merge]
+- **Merge Commit:** a338933
 - **Acceptance Checks:**
   - Website Fact Collection: PASS — Extracted official name ("Ramco Institute of Technology"), short name ("RIT"), address ("North Venganallur Village, Rajapalayam – 626 117, Virudhunagar District, Tamil Nadu"), contact email (`rit@ritrjpm.ac.in`), general phone (`04563 233400`), website (`https://www.ritrjpm.ac.in`), autonomous status, and accreditation (AICTE, Anna University, NAAC A+, NBA), documented in `docs/BRANDING.md`.
   - Logo Preservation: PASS — Downloaded official emblem directly from `https://www.ritrjpm.ac.in/ritlogo.png` to `client/public/branding/ritlogo.png` (207×244 PNG) in original format without alteration.
