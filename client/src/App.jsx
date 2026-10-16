@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
+import { BRANDING } from './config/branding.js';
 
 import { ProtectedRoute } from './components/guards/ProtectedRoute.jsx';
 import { RoleRoute } from './components/guards/RoleRoute.jsx';
@@ -32,6 +33,10 @@ import { ReportsPage } from './pages/reports/ReportsPage.jsx';
 import { NotificationsPage } from './pages/notifications/NotificationsPage.jsx';
 
 export function App() {
+  React.useEffect(() => {
+    document.title = `SIMPS | ${BRANDING.shortName}`;
+  }, []);
+
   return (
     <BrowserRouter>
       <AuthProvider>

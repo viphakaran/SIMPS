@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import apiClient from '../../api/client.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ErrorState } from '../../components/common/LoadingState.jsx';
+import { BRANDING } from '../../config/branding.js';
 
 export function RegisterPage() {
   const { register } = useAuth();
@@ -108,14 +109,20 @@ export function RegisterPage() {
       <div className="card shadow-sm border" style={{ maxWidth: '480px', width: '100%', borderRadius: '12px' }}>
         <div className="card-body p-4 p-sm-5">
           <div className="text-center mb-4">
-            <div
-              className="bg-primary text-white rounded-3 d-inline-flex align-items-center justify-content-center mb-3 shadow-sm"
-              style={{ width: '48px', height: '48px' }}
-            >
-              <i className="bi bi-box-fill fs-4"></i>
-            </div>
+            <img
+              src={BRANDING.logoPath}
+              alt={BRANDING.logoAlt}
+              className="d-inline-block mb-3"
+              style={{ maxHeight: '64px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+            />
             <h1 className="h4 fw-bold text-dark mb-1">Create an Account</h1>
-            <p className="text-muted small mb-0">Register as a department faculty / staff requester</p>
+            <h2 className="h6 fw-semibold text-secondary mb-1">{BRANDING.name}</h2>
+            <p className="text-muted small mb-1 text-break" style={{ fontSize: '12px' }}>
+              {BRANDING.address}
+            </p>
+            <p className="text-muted small mb-0 fw-medium">
+              Register as a faculty / staff requester
+            </p>
           </div>
 
           {error && (
@@ -244,6 +251,12 @@ export function RegisterPage() {
             <Link to="/login" className="small fw-semibold text-decoration-none">
               Sign In
             </Link>
+          </div>
+
+          <div className="text-center mt-3">
+            <p className="text-muted mb-0 text-break" style={{ fontSize: '11px' }}>
+              {BRANDING.disclaimer}
+            </p>
           </div>
         </div>
       </div>

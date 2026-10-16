@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { BRANDING } from '../../config/branding.js';
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -43,14 +44,17 @@ export function LoginPage() {
         <div className="card-body p-4 p-sm-5">
           {/* Logo / Header */}
           <div className="text-center mb-4">
-            <div
-              className="bg-primary text-white rounded-3 d-inline-flex align-items-center justify-content-center mb-3 shadow-sm"
-              style={{ width: '48px', height: '48px' }}
-            >
-              <i className="bi bi-box-fill fs-4"></i>
-            </div>
-            <h1 className="h4 fw-bold text-dark mb-1">SmartInv</h1>
-            <p className="text-muted small mb-0">Ramco Institute of Technology &bull; Central Store</p>
+            <img
+              src={BRANDING.logoPath}
+              alt={BRANDING.logoAlt}
+              className="d-inline-block mb-3"
+              style={{ maxHeight: '64px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+            />
+            <h1 className="h4 fw-bold text-dark mb-1">SIMPS</h1>
+            <h2 className="h6 fw-semibold text-secondary mb-1">{BRANDING.name}</h2>
+            <p className="text-muted small mb-0 text-break" style={{ fontSize: '12px' }}>
+              {BRANDING.address}
+            </p>
           </div>
 
           {/* Pending State Banner */}
@@ -122,6 +126,12 @@ export function LoginPage() {
             <Link to="/register" className="small fw-semibold text-decoration-none">
               Register as Requester
             </Link>
+          </div>
+
+          <div className="text-center mt-3">
+            <p className="text-muted mb-0 text-break" style={{ fontSize: '11px' }}>
+              {BRANDING.disclaimer}
+            </p>
           </div>
         </div>
       </div>

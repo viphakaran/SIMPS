@@ -12,3 +12,5 @@ playwright-report/
 client/test-results/
 client/playwright-report/
 *.timestamp-*.mjs
+scratch/
+*.docx

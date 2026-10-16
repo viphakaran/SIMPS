@@ -14,8 +14,8 @@ Tracking build progress across all phases (prompts 00 through 10).
 | 06 | 06-client-foundation.md | feat/06-client-foundation | done | 91ba015a536d8ad137ca4c9d21b25c23e4eba4ab |
 | 07 | 07-client-masters-inventory.md | feat/07-client-inventory | done | 1e0f6deaa912c13149a0f70b6b1c7f346590d89f |
 | 08 | 08-client-procurement-dashboards.md | feat/08-client-procurement | done | e9a701cb2fc1abc0447df2d10458373f25eee180 |
-| 09 | 09-demo-data.md | feat/09-demo | done | bcdc488d20a8a8a1744868019b45f3bdaf22687c |
-| 10 | 10-tests-docs-hardening.md | feat/10-tests-docs-hardening | not started | - |
+| 10 | 10-tests-docs-hardening.md | feat/10-final | done | 17ad56885df46960cf16e00aa35f8d0a3d463870 |
+| 11 | Institutional Branding & Real Master Data | feat/11-branding | done | [pending merge] |
 
 ---
 
@@ -188,7 +188,7 @@ Tracking build progress across all phases (prompts 00 through 10).
 ### Phase 10: Tests, Docs & Hardening
 - **Status:** done
 - **Branch:** feat/10-final
-- **Merge Commit:** ac90a80
+- **Merge Commit:** 17ad568
 - **Acceptance Checks:**
   - Coverage review on `server/src/services`: PASS — Statements 81.44%, Functions 95.37%, Lines 81.22% across all 11 services (auth, category, department, item, notification, order, report, request, stock, supplier, user). All 8 Jest suites pass (82/82 tests passing).
   - Security penetration tests (`server/tests/security.test.js`): PASS — All 6 attack scenarios validated: SQL injection parameters sanitized, pagination query params validated with Zod, JWT signature/algorithm 'none' tampering rejected, cross-supplier PO access forbidden/404, cross-dept request approval blocked, registration mass-assignment prevented, brute force rate limiter blocks excess attempts with 429.
@@ -200,3 +200,20 @@ Tracking build progress across all phases (prompts 00 through 10).
   - Full Lint & Client Build: PASS — `npm run lint` 0 errors, `npm run build -w client` built in 13.91s.
 - **Deviations:** None
 - **Open Issues:** None
+
+### Phase 11: Institutional Branding & Real Master Data
+- **Status:** done
+- **Branch:** feat/11-branding
+- **Merge Commit:** [pending merge]
+- **Acceptance Checks:**
+  - Website Fact Collection: PASS — Extracted official name ("Ramco Institute of Technology"), short name ("RIT"), address ("North Venganallur Village, Rajapalayam – 626 117, Virudhunagar District, Tamil Nadu"), contact email (`rit@ritrjpm.ac.in`), general phone (`04563 233400`), website (`https://www.ritrjpm.ac.in`), autonomous status, and accreditation (AICTE, Anna University, NAAC A+, NBA), documented in `docs/BRANDING.md`.
+  - Logo Preservation: PASS — Downloaded official emblem directly from `https://www.ritrjpm.ac.in/ritlogo.png` to `client/public/branding/ritlogo.png` (207×244 PNG) in original format without alteration.
+  - Central Branding Config: PASS — Created `client/src/config/branding.js` and `server/src/config/branding.js`. Zero hardcoded college facts in application business logic.
+  - UI Branding & Disclaimer: PASS — Login & Register pages display official logo (max height 64px), college name, address, and student project disclaimer; sidebar brand block displays logo (max height 32px), SIMPS, and "RIT Central Store"; document title set to `SIMPS | RIT`.
+  - Master Department Seeding (`npm run seed:college`): PASS — Created `seed/college.js`; first run inserted verified real departments with `is_demo = 0`; second run inserted strictly 0 rows (idempotent).
+  - Demo Coexistence: PASS — `demo:load` reuses existing real departments without duplicates; `demo:status` confirms real vs demo breakdown; `demo:clear` unlinks demo HoDs and removes only `is_demo = 1` rows, leaving real departments intact.
+  - Automated Tests: PASS — `npm run lint` (0 errors), `npm test` (9 suites, 86/86 tests passing), `npm run build -w client` (clean production build in 16.77s), Playwright E2E suite (17/17 tests passing across all suites).
+  - Automated Screenshots: PASS — Playwright generated and saved `docs/screenshots/login.png`, `docs/screenshots/register.png`, and `docs/screenshots/dashboard.png`.
+- **Deviations:** Documented in `docs/CHANGES.md`.
+- **Open Issues:** None
+
