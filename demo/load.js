@@ -48,7 +48,15 @@ export async function loadDemoData(connection, options = {}) {
   }
 
   // 3. Departments (4)
-  const departmentNames = [
+  // Re-use existing real departments (e.g. from seed:college) if present; never create duplicates
+  const targetDepartmentNames = [
+    'Mechanical Engineering',
+    'Civil Engineering',
+    'Electrical and Electronics Engineering',
+    'Computer Science and Engineering'
+  ];
+
+  const fallbackDemoNames = [
     'Demo Dept - Mechanical Engineering',
     'Demo Dept - Civil Engineering',
     'Demo Dept - Electrical & Electronics',
@@ -56,12 +64,25 @@ export async function loadDemoData(connection, options = {}) {
   ];
 
   const departmentIds = [];
-  for (const name of departmentNames) {
-    const [res] = await connection.query(
-      'INSERT INTO departments (name, is_active, is_demo) VALUES (?, 1, 1)',
-      [name]
+  for (let i = 0; i < targetDepartmentNames.length; i++) {
+    const targetName = targetDepartmentNames[i];
+    const fallbackName = fallbackDemoNames[i];
+
+    // Check if target real or demo department already exists
+    const [existing] = await connection.query(
+      'SELECT id, name, is_demo FROM departments WHERE name = ? OR name = ? LIMIT 1',
+      [targetName, fallbackName]
     );
-    departmentIds.push(res.insertId);
+
+    if (existing.length > 0) {
+      departmentIds.push(existing[0].id);
+    } else {
+      const [res] = await connection.query(
+        'INSERT INTO departments (name, is_active, is_demo) VALUES (?, 1, 1)',
+        [targetName]
+      );
+      departmentIds.push(res.insertId);
+    }
   }
 
   // 4. Suppliers (6)

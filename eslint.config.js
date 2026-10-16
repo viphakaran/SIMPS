@@ -11,11 +11,12 @@ export default [
       '**/node_modules/**',
       '**/dist/**',
       '**/coverage/**',
-      'smartinv-build-pack/**'
+      'smartinv-build-pack/**',
+      'scratch/**'
     ]
   },
   {
-    files: ['server/**/*.js', 'demo/**/*.js'],
+    files: ['server/**/*.js', 'demo/**/*.js', 'seed/**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',

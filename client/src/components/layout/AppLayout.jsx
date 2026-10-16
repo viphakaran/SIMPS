@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import apiClient from '../../api/client.js';
 import { ChangePasswordModal } from '../auth/ChangePasswordModal.jsx';
+import { BRANDING } from '../../config/branding.js';
 
 export function AppLayout() {
   const { user, logout } = useAuth();
@@ -155,19 +156,22 @@ export function AppLayout() {
       {/* Desktop Fixed Sidebar */}
       <aside className="sidebar-wrapper">
         <div className="p-3 border-bottom d-flex align-items-center gap-2">
-          <div className="bg-primary text-white rounded p-2 d-flex align-items-center justify-content-center">
-            <i className="bi bi-box-fill fs-5"></i>
-          </div>
-          <div>
-            <div className="fw-bold text-dark lh-1">SmartInv</div>
-            <small className="text-muted" style={{ fontSize: '11px' }}>
-              RIT Central Store
+          <img
+            src={BRANDING.logoPath}
+            alt={BRANDING.logoAlt}
+            className="flex-shrink-0"
+            style={{ maxHeight: '32px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+          />
+          <div className="overflow-hidden">
+            <div className="fw-bold text-dark lh-1">SIMPS</div>
+            <small className="text-muted text-truncate d-block" style={{ fontSize: '11px' }}>
+              {BRANDING.shortName} Central Store
             </small>
           </div>
         </div>
         <div className="py-3 flex-grow-1 overflow-y-auto">{renderNavLinks()}</div>
-        <div className="p-3 border-top bg-light text-muted small text-center">
-          v1.0.0 &bull; Ramco Institute of Tech
+        <div className="p-3 border-top bg-light text-muted small text-center text-truncate">
+          v1.1.0 &bull; {BRANDING.name}
         </div>
       </aside>
 
@@ -179,13 +183,16 @@ export function AppLayout() {
       >
         <div className="offcanvas-header border-bottom">
           <div className="d-flex align-items-center gap-2">
-            <div className="bg-primary text-white rounded p-2 d-flex align-items-center justify-content-center">
-              <i className="bi bi-box-fill fs-5"></i>
-            </div>
-            <div>
-              <div className="fw-bold text-dark lh-1">SmartInv</div>
-              <small className="text-muted" style={{ fontSize: '11px' }}>
-                RIT Central Store
+            <img
+              src={BRANDING.logoPath}
+              alt={BRANDING.logoAlt}
+              className="flex-shrink-0"
+              style={{ maxHeight: '32px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+            />
+            <div className="overflow-hidden">
+              <div className="fw-bold text-dark lh-1">SIMPS</div>
+              <small className="text-muted text-truncate d-block" style={{ fontSize: '11px' }}>
+                {BRANDING.shortName} Central Store
               </small>
             </div>
           </div>

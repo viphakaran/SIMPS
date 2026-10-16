@@ -1,8 +1,11 @@
 # SIMPS — Smart Inventory and Procurement Management System
+### Ramco Institute of Technology &bull; Central Store
+
+> **Notice**: Student mini project. Not an official system of Ramco Institute of Technology.
 
 [![CI](https://github.com/viphakaran/SIMPS/actions/workflows/ci.yml/badge.svg)](https://github.com/viphakaran/SIMPS/actions/workflows/ci.yml)
 
-A robust, full-featured web application designed for the Central Store of **Ramco Institute of Technology**. SIMPS manages inventory stock tracking, purchase requests with single-stage Head of Department (HoD) and Principal approvals, purchase orders to vendors, goods receipt with atomic stock updates, daily low-stock digests, and role-based analytical reports.
+A robust, full-featured web application designed for the Central Store of **Ramco Institute of Technology, Rajapalayam**. SIMPS manages inventory stock tracking, purchase requests with single-stage Head of Department (HoD) and Principal approvals, purchase orders to vendors, goods receipt with atomic stock updates, daily low-stock digests, and role-based analytical reports.
 
 ---
 
@@ -190,7 +193,7 @@ npm run demo:status
 # Remove all demo records
 npm run demo:clear
 ```
-- **Demo users**: Password for all generated demo users is `DemoPass123!`.
+- **Demo users**: Password for generated demo users is printed securely to the console upon running `npm run demo:load`.
 - **Demo email domain**: Strictly uses `@demo.invalid`.
 - **College institutional domain**: `ritrjpm.ac.in`.
 
@@ -233,6 +236,6 @@ SIMPS/
 
 ---
 
-## License
+## License & Notice
 
-This project is developed for educational purposes for **Ramco Institute of Technology**. All rights reserved.
+Student mini project. Not an official system of Ramco Institute of Technology. Developed for educational purposes. All rights reserved.

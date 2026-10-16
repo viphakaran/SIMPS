@@ -3,6 +3,7 @@ import env from '../config/env.js';
 import { query } from '../config/db.js';
 import { parsePagination } from '../utils/pagination.js';
 import { NotFoundError } from '../utils/errors.js';
+import { BRANDING } from '../config/branding.js';
 
 let transporter = null;
 if (env.SMTP_HOST && env.SMTP_USER) {
@@ -55,8 +56,8 @@ export class NotificationService {
             from: env.MAIL_FROM || 'noreply@ritrjpm.ac.in',
             to: recipient.email,
             subject: `[SIMPS] ${type.replace(/_/g, ' ')}`,
-            text: message,
-            html: `<p>${message}</p>${link ? `<p><a href="${link}">View in SIMPS</a></p>` : ''}`
+            text: `${message}\n\n--\n${BRANDING.name}\n${BRANDING.address}\n${BRANDING.website}\n${BRANDING.disclaimer}`,
+            html: `<p>${message}</p>${link ? `<p><a href="${link}">View in SIMPS</a></p>` : ''}<hr style="border:0;border-top:1px solid #e5e7eb;margin:20px 0;"/><p style="color:#6b7280;font-size:12px;margin:0;"><strong>${BRANDING.name}</strong> &bull; Central Store<br/>${BRANDING.address}<br/><a href="${BRANDING.website}" style="color:#2563eb;">${BRANDING.website}</a><br/><em>${BRANDING.disclaimer}</em></p>`
           });
           emailed = 1;
         } catch (err) {
